@@ -28,6 +28,14 @@ import {
   type SolarPVInput,
 } from "@/lib/solarpv";
 import { won } from "@/lib/domain";
+import dynamic from "next/dynamic";
+
+const BuildingSolarMap = dynamic(() => import("@/components/BuildingSolarMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-[460px] items-center justify-center rounded-xl bg-slate-100 text-sm text-slate-400">지도 로딩…</div>
+  ),
+});
 
 const AMBER = "#E39A00";
 const TEAL = "#0A9AA8";
@@ -187,6 +195,20 @@ export default function SolarPage() {
           </div>
         </div>
       </div>
+
+      {/* 건물별 일조량 지도 */}
+      <section className="card p-5">
+        <div className="text-sm font-bold">🗺️ 건물별 일조량·발전 잠재량 지도 (서울 실제 건물)</div>
+        <div className="mt-1 text-xs text-slate-400">
+          OSM 실제 건물에 옥상 면적 × 위치별 연 일사량(pvlib 방법론)을 적용해 건물별 발전 잠재량을 색으로 표시합니다. 건물에 마우스를 올리면 상세, 드래그·휠로 회전·줌.
+        </div>
+        <div className="mt-3">
+          <BuildingSolarMap />
+        </div>
+        <div className="mt-2 text-[11px] text-slate-400">
+          ※ 위도·경사 기반 모델 추정치입니다. 주변 건물 그림자(차폐)·옥상 구조물까지 반영한 정밀 산출은 LiDAR/DSM + pvlib 파이프라인이 필요합니다.
+        </div>
+      </section>
 
       {/* 수익 구성 */}
       <div className="card p-5">
