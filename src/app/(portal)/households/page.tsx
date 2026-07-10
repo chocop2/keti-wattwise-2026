@@ -14,8 +14,16 @@ import {
   CartesianGrid,
   Cell,
 } from "recharts";
-import { HOUSEHOLDS, allCalc, calc, houseAnswer, type HouseholdCalc } from "@/lib/households";
+import { HOUSEHOLDS, allCalc, calc, houseAnswer, homeSolar, type HouseholdCalc } from "@/lib/households";
 import { anomaly, won } from "@/lib/domain";
+import dynamic from "next/dynamic";
+
+const BuildingSolarMap = dynamic(() => import("@/components/BuildingSolarMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-[380px] items-center justify-center rounded-xl bg-slate-100 text-sm text-slate-400">지도 로딩…</div>
+  ),
+});
 
 const AMBER = "#E39A00";
 const TEAL = "#0A9AA8";
@@ -96,6 +104,8 @@ function Detail({ c, onBack }: { c: HouseholdCalc; onBack: () => void }) {
     },
   ]);
   const [input, setInput] = useState("");
+  const [subsidyOn, setSubsidyOn] = useState(true);
+  const hs = homeSolar(c.hh.solarKw ?? 0.4, c.monthly * 12, subsidyOn);
   const listRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
@@ -241,6 +251,49 @@ function Detail({ c, onBack }: { c: HouseholdCalc; onBack: () => void }) {
           </div>
         </div>
       </section>
+
+      {/* 태양광 설치 시뮬레이션 */}
+      {c.hh.bIdx != null && (
+        <section className="card p-5">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="text-sm font-bold">☀️ 이 가정 태양광 설치 시뮬레이션 (베란다형)</div>
+            <label className="flex items-center gap-2 text-xs text-slate-500">
+              보조금 수령
+              <button
+                onClick={() => setSubsidyOn((v) => !v)}
+                className={`relative h-5 w-9 rounded-full transition ${subsidyOn ? "bg-ok" : "bg-slate-300"}`}
+              >
+                <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white transition ${subsidyOn ? "left-4" : "left-0.5"}`} />
+              </button>
+            </label>
+          </div>
+          <div className="mt-1 text-xs text-slate-400">지도에서 이 가정 건물(하이라이트)을 확인하고, 권장 용량 기준 발전·절감·회수를 실제 시장가로 계산합니다.</div>
+          <div className="mt-3 grid gap-4 lg:grid-cols-[1.35fr_1fr]">
+            <BuildingSolarMap focusIdx={c.hh.bIdx} focusLoc={c.hh.loc} height={380} />
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  ["권장 용량", `${hs.kw}kW`, "text-ink"],
+                  ["연 발전량", `${hs.genYr.toLocaleString()}kWh`, "text-ink"],
+                  ["RE100 달성률", `${hs.re100.toFixed(0)}%`, "text-teal"],
+                  ["투자 회수", `${hs.bep.toFixed(1)}년`, "text-amber"],
+                ].map(([l, v, t]) => (
+                  <div key={l} className="rounded-lg border border-slate-200 p-3 text-center">
+                    <div className="text-xs text-slate-400">{l}</div>
+                    <div className={`text-lg font-extrabold ${t}`}>{v}</div>
+                  </div>
+                ))}
+              </div>
+              <div className="space-y-1.5 rounded-lg bg-slate-50 p-3 text-sm">
+                <div className="flex justify-between"><span className="text-slate-400">자부담 ({subsidyOn ? "보조금 수령" : "미수령"})</span><b>약 {hs.selfPay}만원</b></div>
+                <div className="flex justify-between"><span className="text-slate-400">연 절감액</span><span>약 {hs.saveYr}만원</span></div>
+                <div className="flex justify-between"><span className="text-slate-400">25년 순이익</span><b className="text-ok">{hs.net25.toLocaleString()}만원</b></div>
+              </div>
+              <div className="text-[11px] text-slate-400">※ 실제 시장가 표(400W 단위) 선형 환산 추정. 건물 그림자 등 정밀 산출은 별도 분석 필요.</div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* 챗봇 */}
       <div className="card overflow-hidden">

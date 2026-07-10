@@ -9,6 +9,9 @@ export type Household = {
   emoji: string;
   note: string;
   elderly?: boolean;
+  bIdx?: number; // 지도에서 하이라이트할 건물 인덱스
+  loc?: [number, number]; // [lng, lat]
+  solarKw?: number; // 권장 태양광 용량(kW)
   appliances: Appliance[];
 };
 
@@ -19,6 +22,9 @@ export const HOUSEHOLDS: Household[] = [
     persons: "4인 · 아파트 84㎡",
     emoji: "👨‍👩‍👧‍👦",
     note: "여름 냉방·건조기 사용이 많은 전형적 4인 가구",
+    bIdx: 453,
+    loc: [127.02104, 37.58371],
+    solarKw: 0.8,
     appliances: [
       { name: "에어컨", icon: "❄️", watt: 1800, hours: 6 },
       { name: "냉장고", icon: "🧊", watt: 40, hours: 24 },
@@ -37,6 +43,9 @@ export const HOUSEHOLDS: Household[] = [
     persons: "1인 · 원룸 26㎡",
     emoji: "🧑‍💻",
     note: "재실 시간 짧고 소형 가전 위주. 사용량 낮음",
+    bIdx: 105,
+    loc: [127.02076, 37.59202],
+    solarKw: 0.4,
     appliances: [
       { name: "냉장고", icon: "🧊", watt: 30, hours: 24 },
       { name: "에어컨", icon: "❄️", watt: 1500, hours: 2 },
@@ -54,6 +63,9 @@ export const HOUSEHOLDS: Household[] = [
     emoji: "🧓",
     note: "냉장고·난방 비중 크고 활동가전 적음 (이상감지 대상)",
     elderly: true,
+    bIdx: 118,
+    loc: [127.02095, 37.5908],
+    solarKw: 0.5,
     appliances: [
       { name: "냉장고", icon: "🧊", watt: 45, hours: 24 },
       { name: "전기장판", icon: "🛏️", watt: 120, hours: 9 },
@@ -70,6 +82,9 @@ export const HOUSEHOLDS: Household[] = [
     persons: "2인 · 아파트 59㎡",
     emoji: "👩‍❤️‍👨",
     note: "저녁 시간대 집중 사용 (건조기·식기세척기)",
+    bIdx: 451,
+    loc: [127.02041, 37.58384],
+    solarKw: 0.6,
     appliances: [
       { name: "에어컨", icon: "❄️", watt: 1800, hours: 4 },
       { name: "냉장고", icon: "🧊", watt: 40, hours: 24 },
@@ -87,6 +102,9 @@ export const HOUSEHOLDS: Household[] = [
     persons: "1인 · 오피스텔 40㎡",
     emoji: "🏠",
     note: "종일 재실 — 냉방·PC를 장시간 가동",
+    bIdx: 325,
+    loc: [127.03074, 37.58206],
+    solarKw: 0.8,
     appliances: [
       { name: "에어컨", icon: "❄️", watt: 1800, hours: 8 },
       { name: "냉장고", icon: "🧊", watt: 40, hours: 24 },
@@ -125,6 +143,18 @@ export function calc(hh: Household): HouseholdCalc {
 
 export function allCalc() {
   return HOUSEHOLDS.map(calc);
+}
+
+// 가정 태양광(베란다형) 설치 시뮬 — 실제 시장가 표(400W 단위) 기준 선형 환산
+export function homeSolar(kw: number, consumptionYr: number, subsidyOn: boolean) {
+  const units = kw / 0.4; // 400W 단위 수
+  const genYr = Math.round(units * 45 * 12); // 연 발전량 kWh (월 ~45kWh/400W)
+  const selfPay = Math.round(units * (subsidyOn ? 35 : 80)); // 자부담 만원
+  const saveYr = Math.round(units * 18); // 연 절감 만원 (월 ~1.5만/400W)
+  const bep = saveYr > 0 ? selfPay / saveYr : Infinity; // 회수기간(년)
+  const re100 = Math.min(100, (genYr / consumptionYr) * 100);
+  const net25 = saveYr * 25 - selfPay; // 25년 순이익 만원
+  return { kw, genYr, selfPay, saveYr, bep, re100, net25 };
 }
 
 // 가정별 챗봇 응답 (선택된 가정 데이터 기반)
