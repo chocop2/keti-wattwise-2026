@@ -9,7 +9,7 @@ const LINKS = [
   { href: "/ideas", label: "아이디어" },
   { href: "/issues", label: "이슈/할일" },
   { href: "/board", label: "게시판" },
-  { href: "/households", label: "가정별 데모" },
+  { href: "/households", label: "스마트홈 진단" },
   { href: "/analytics", label: "전력 분석" },
   { href: "/solar", label: "RE100 태양광" },
 ];

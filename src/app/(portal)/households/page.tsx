@@ -32,7 +32,7 @@ export default function HouseholdsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="section-title">🏘️ 가정별 전력 데모</h1>
+        <h1 className="section-title">🏠 스마트홈 진단 — 가정별 전력·이상감지</h1>
         <p className="mt-1 text-sm text-slate-500">
           가정을 선택하면 가전별 사용량을 뜯어보고, 통합 전력량·요금과 절약 포인트를 챗봇에게 물어볼 수 있어요. 모든 수치는 정격전력×사용시간 기반 추정입니다.
         </p>

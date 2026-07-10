@@ -55,7 +55,7 @@ export default function Home() {
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
               <Link href="/analytics" className="btn-amber">🔋 전력 분석 대시보드</Link>
-              <Link href="/households" className="btn-primary">🛟 가정별 데모 (이상탐지 포함)</Link>
+              <Link href="/households" className="btn-primary">🏠 스마트홈 진단 (전력·이상감지)</Link>
               <Link href="/ideas" className="btn-ghost">💡 아이디어 논의</Link>
             </div>
           </div>
