@@ -82,7 +82,11 @@ function Kpi({ label, value, sub, tone = "text-ink" }: { label: string; value: s
 
 function Detail({ c, onBack }: { c: HouseholdCalc; onBack: () => void }) {
   const elderly = !!c.hh.elderly;
-  const an = useMemo(() => (elderly ? anomaly(14, 17) : null), [elderly]);
+  const [aFrom, setAFrom] = useState(14);
+  const [aNow, setANow] = useState(17);
+  const aNowH = Math.max(aFrom, aNow);
+  const an = useMemo(() => (elderly ? anomaly(aFrom, aNowH) : null), [elderly, aFrom, aNowH]);
+  const anTone = an ? (an.tier === "경보" ? "#D8432B" : an.tier === "주의" ? "#E39A00" : "#12A150") : "#D8432B";
   const chartData = c.items.map((a) => ({ name: `${a.icon} ${a.name}`, kwh: +a.monthlyKwh.toFixed(1) }));
 
   const [msgs, setMsgs] = useState<Msg[]>([
@@ -97,10 +101,16 @@ function Detail({ c, onBack }: { c: HouseholdCalc; onBack: () => void }) {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
   }, [msgs]);
 
-  function reply(q: string): string {
-    if (elderly && an && has(q, "이상", "안부", "위험", "쓰러", "괜찮", "상태", "안전"))
-      return `🛟 이상 패턴 점검 — 현재 위험도 ‘${an.tier}’(${an.risk}/100). ${an.narrative}`;
-    return houseAnswer(q, c);
+  function reply(q: string): { text: string; set?: [number, number] } {
+    if (elderly) {
+      if (has(q, "쓰러", "위험 상황", "이상 상황", "비상", "응급", "위험한"))
+        return { set: [13, 20], text: "⚠️ 위험 상황을 재현했어요. 오후 1시부터 활동가전이 멈춘 시나리오로 전환합니다 — 위 이상감지 패널이 ‘경보’로 바뀐 걸 확인하세요." };
+      if (has(q, "정상", "평소", "되돌", "괜찮", "해제", "원래"))
+        return { set: [22, 22], text: "✅ 정상 하루로 되돌렸어요. 활동가전이 평소 범위 안에 있어 위험도가 ‘관심’으로 내려갑니다." };
+      if (an && has(q, "이상", "안부", "위험", "상태", "안전", "지금"))
+        return { text: `🛟 이상 패턴 점검 — 현재 위험도 ‘${an.tier}’(${an.risk}/100). ${an.narrative}` };
+    }
+    return { text: houseAnswer(q, c) };
   }
   function send(text: string) {
     const t = text.trim();
@@ -108,11 +118,15 @@ function Detail({ c, onBack }: { c: HouseholdCalc; onBack: () => void }) {
     setMsgs((m) => [...m, { role: "user", text: t }]);
     setInput("");
     const r = reply(t);
-    setTimeout(() => setMsgs((m) => [...m, { role: "bot", text: r }]), 240);
+    if (r.set) {
+      setAFrom(r.set[0]);
+      setANow(r.set[1]);
+    }
+    setTimeout(() => setMsgs((m) => [...m, { role: "bot", text: r.text }]), 240);
   }
 
   const chips = elderly
-    ? ["제일 많이 쓰는 가전?", "이 어르신 이상 있어?", "뭘 줄여야 해?", "이 집 요금 얼마?"]
+    ? ["쓰러진 상황 보여줘", "정상으로 되돌려", "이 어르신 이상 있어?", "뭘 줄여야 해?"]
     : ["제일 많이 쓰는 가전?", "뭘 줄여야 해?", "이 집 요금 얼마?", "에어컨 사용량은?"];
 
   const actData = an
@@ -153,10 +167,20 @@ function Detail({ c, onBack }: { c: HouseholdCalc; onBack: () => void }) {
         <section className="card border-danger/30 p-5" style={{ background: "#FDF4F2" }}>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="text-sm font-bold text-danger">🛟 이상 패턴 감지 — 이 가정은 노령 1인가구로 관심이 필요합니다</div>
-            <span className="badge bg-white text-danger">위험도 {an.risk}/100 · {an.tier}</span>
+            <span className="badge bg-white" style={{ color: anTone }}>위험도 {an.risk}/100 · {an.tier}</span>
           </div>
           <div className="mt-1 text-xs text-slate-500">
-            활동 신호 가전(TV·전기포트·조명)이 평소 범위를 벗어나 <b>{an.lastActiveHour}시부터 활동 정지</b> — 냉장고는 정상 가동 중(외출 아님).
+            활동 신호 가전(TV·전기포트·조명)이 평소 범위를 벗어나 <b>{an.lastActiveHour}시부터 활동 정지</b> — 냉장고는 정상 가동 중(외출 아님). 슬라이더나 아래 챗봇으로 상황을 바꿔보세요.
+          </div>
+          <div className="mt-3 grid gap-4 sm:grid-cols-2">
+            <div>
+              <div className="label">활동 정지 시작 · {aFrom}시</div>
+              <input type="range" min={6} max={22} value={aFrom} onChange={(e) => setAFrom(+e.target.value)} className="w-full accent-danger" />
+            </div>
+            <div>
+              <div className="label">현재 시각 · {aNowH}시</div>
+              <input type="range" min={aFrom} max={23} value={aNowH} onChange={(e) => setANow(+e.target.value)} className="w-full accent-danger" />
+            </div>
           </div>
           <div className="mt-3 h-56">
             <ResponsiveContainer>
@@ -168,7 +192,7 @@ function Detail({ c, onBack }: { c: HouseholdCalc; onBack: () => void }) {
                 <Area dataKey="lo" stackId="b" stroke="none" fill="transparent" isAnimationActive={false} />
                 <Area dataKey="band" stackId="b" stroke="none" fill="#e7cfca" fillOpacity={0.6} isAnimationActive={false} />
                 <Line dataKey="base" stroke="#c9a59e" strokeDasharray="4 4" dot={false} isAnimationActive={false} />
-                <Line dataKey="today" stroke={DANGER} strokeWidth={3} dot={false} connectNulls isAnimationActive={false} />
+                <Line dataKey="today" stroke={anTone} strokeWidth={3} dot={false} connectNulls isAnimationActive={false} />
               </ComposedChart>
             </ResponsiveContainer>
           </div>
