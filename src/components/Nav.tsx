@@ -12,6 +12,7 @@ const LINKS = [
   { href: "/households", label: "가정별 데모" },
   { href: "/demo", label: "이상감지 데모" },
   { href: "/analytics", label: "전력 분석" },
+  { href: "/solar", label: "RE100 태양광" },
 ];
 
 export default function Nav({ user }: { user: { name: string; role: string } }) {
