@@ -1,0 +1,124 @@
+
+> wattwise-portal@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+
+ ✓ Starting...
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+ ✓ Ready in 4.1s
+ ✓ Compiled /src/middleware in 489ms (72 modules)
+ ○ Compiling /login ...
+ ✓ Compiled /login in 4.7s (531 modules)
+ GET /login 200 in 54ms
+ ✓ Compiled in 244ms (240 modules)
+ ✓ Compiled in 148ms (240 modules)
+ ✓ Compiled in 140ms (240 modules)
+ ✓ Compiled in 163ms (240 modules)
+ ✓ Compiled in 170ms (240 modules)
+ ✓ Compiled in 129ms (298 modules)
+ ✓ Compiled in 136ms (240 modules)
+ ✓ Compiled in 174ms (312 modules)
+ ✓ Compiled in 149ms (240 modules)
+ ✓ Compiled in 160ms (312 modules)
+ ✓ Compiled in 158ms (240 modules)
+ ✓ Compiled in 89ms (298 modules)
+ ✓ Compiled in 182ms (240 modules)
+ ✓ Compiled in 127ms (298 modules)
+ ✓ Compiled in 185ms (240 modules)
+ ✓ Compiled in 105ms (298 modules)
+ ✓ Compiled in 166ms (240 modules)
+ ✓ Compiled in 108ms (298 modules)
+ ✓ Compiled in 214ms (240 modules)
+ ✓ Compiled in 180ms (312 modules)
+ ✓ Compiled /login in 477ms (291 modules)
+ GET /login 200 in 682ms
+ GET /login 200 in 46ms
+ ✓ Compiled /favicon.ico in 408ms (323 modules)
+ GET /favicon.ico 200 in 559ms
+ ○ Compiling / ...
+ ✓ Compiled / in 842ms (620 modules)
+ POST /login 303 in 1102ms
+ GET /favicon.ico 200 in 33ms
+ GET / 200 in 108ms
+ GET /favicon.ico 200 in 15ms
+ ✓ Compiled /ideas in 495ms (643 modules)
+ GET /ideas 200 in 714ms
+ GET /favicon.ico 200 in 26ms
+ ○ Compiling /demo ...
+ ✓ Compiled /demo in 4.2s (1711 modules)
+ GET /demo 200 in 4600ms
+ GET /favicon.ico 200 in 27ms
+ ○ Compiling /analytics ...
+ ✓ Compiled /analytics in 546ms (1721 modules)
+ GET /analytics 200 in 861ms
+ GET /favicon.ico 200 in 17ms
+ ✓ Compiled /issues in 465ms (1725 modules)
+ GET /issues 200 in 574ms
+ GET /favicon.ico 200 in 18ms
+ ✓ Compiled /decisions in 471ms (1727 modules)
+ GET /decisions 200 in 556ms
+ GET /favicon.ico 200 in 19ms
+ GET /login 200 in 45ms
+ GET /favicon.ico 200 in 19ms
+ POST /login 303 in 89ms
+ GET /favicon.ico 200 in 14ms
+ GET / 200 in 50ms
+ GET /favicon.ico 200 in 16ms
+ GET /ideas 200 in 62ms
+ GET /favicon.ico 200 in 14ms
+ GET /demo 200 in 119ms
+ GET /favicon.ico 200 in 16ms
+ GET /analytics 200 in 57ms
+ GET /favicon.ico 200 in 16ms
+ GET /issues 200 in 57ms
+ GET /favicon.ico 200 in 13ms
+ ✓ Compiled in 493ms (803 modules)
+ ✓ Compiled in 193ms (803 modules)
+ ✓ Compiled in 168ms (803 modules)
+ ✓ Compiled /login in 220ms (291 modules)
+ GET /login 200 in 358ms
+ ✓ Compiled /favicon.ico in 225ms (323 modules)
+ GET /favicon.ico 200 in 278ms
+ ✓ Compiled / in 90ms (369 modules)
+ POST /login 303 in 223ms
+ GET /favicon.ico 200 in 17ms
+ GET /login 200 in 84ms
+ GET /favicon.ico 200 in 11ms
+ POST /login 303 in 49ms
+ GET /favicon.ico 200 in 12ms
+ GET /login 200 in 52ms
+ GET /favicon.ico 200 in 9ms
+ POST /login 200 in 27ms
+ GET /login 200 in 65ms
+ GET /favicon.ico 200 in 9ms
+ POST /login 200 in 29ms
+ GET /login 200 in 45ms
+ GET /favicon.ico 200 in 11ms
+ POST /login 303 in 40ms
+ ✓ Compiled /ideas in 93ms (392 modules)
+ ✓ Compiled /demo in 461ms (927 modules)
+ ✓ Compiled /analytics in 185ms (933 modules)
+ ✓ Compiled /decisions in 128ms (904 modules)
+ ✓ Compiled /issues in 137ms (906 modules)
+ ✓ Compiled /board in 358ms (1697 modules)
+ ✓ Compiled /files in 291ms (1699 modules)
+ ✓ Compiled in 217ms (803 modules)
+ ✓ Compiled in 868ms (1699 modules)
+ ✓ Compiled in 332ms (1699 modules)
+ ✓ Compiled in 286ms (1699 modules)
+ ✓ Compiled in 633ms (1755 modules)
+ ✓ Compiled in 831ms (1699 modules)
+ ✓ Compiled /login in 247ms (899 modules)
+ GET /login 200 in 369ms
+ ✓ Compiled /favicon.ico in 149ms (931 modules)
+ GET /favicon.ico 200 in 210ms
+ POST /login 303 in 88ms
+ GET /demo 200 in 157ms
+ GET /favicon.ico 200 in 11ms
+ GET /login 200 in 29ms
