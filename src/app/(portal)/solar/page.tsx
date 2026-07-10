@@ -41,6 +41,34 @@ const AMBER = "#E39A00";
 const TEAL = "#0A9AA8";
 const OK = "#12A150";
 
+// 실제 시장가 기준 (사용자 제공 표, 단위 만원 · 정부지원 반영)
+const COST = [
+  {
+    name: "아파트 베란다형",
+    spec: "400~800W",
+    emoji: "🏢",
+    fit: "아파트·빌라 등 공동주택",
+    install: "60~100만원 (400W 평균 ~90만)",
+    subsidy: "30~72만원",
+    selfWith: 35, // 자부담(보조금 수령) 평균 만원 (10~60)
+    selfWithout: 80, // 자부담(미수령) 평균 만원 (60~100)
+    genMonth: "40~50kWh",
+    saveYear: 18, // 연 절감 만원 (월 ~1.5만)
+  },
+  {
+    name: "단독주택 주택형",
+    spec: "3kW",
+    emoji: "🏠",
+    fit: "단독주택·농가",
+    install: "493~600만원 (상한 493.1만)",
+    subsidy: "179~350만원",
+    selfWith: 193, // 자부담(보조금 수령) 평균 만원 (150~250)
+    selfWithout: 550, // 자부담(미수령) 평균 만원 (500~600)
+    genMonth: "288~400kWh",
+    saveYear: 75, // 연 절감 만원 (월 평균 ~6.3만)
+  },
+];
+
 export default function SolarPage() {
   const [target, setTarget] = useState<TargetKind>("가정");
   const [cityIdx, setCityIdx] = useState(0);
@@ -49,6 +77,7 @@ export default function SolarPage() {
   const [azimuth, setAzimuth] = useState(0);
   const [selfRate, setSelfRate] = useState(0.5);
   const [sellPerKwh, setSellPerKwh] = useState(130);
+  const [subsidyOn, setSubsidyOn] = useState(true);
 
   const t = TARGETS[target];
   const city = CITIES[cityIdx];
@@ -100,6 +129,61 @@ export default function SolarPage() {
         <Kpi label="연 예상 수익" value={won(r.annualRevenue)} sub="자가소비 절감 + 판매수익" tone="text-teal" />
         <Kpi label="손익분기" value={isFinite(r.bepYears) ? `${r.bepYears.toFixed(1)}년` : "—"} sub={`설치비 ${won(r.install)}`} />
       </div>
+
+      {/* 실제 시장가 기준 비용·회수 계산 (사용자 제공 표) */}
+      <section className="card p-5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="text-sm font-bold">💰 실제 시장가 기준 설치 비용·회수 계산</div>
+          <label className="flex items-center gap-2 text-xs text-slate-500">
+            보조금 수령
+            <button
+              onClick={() => setSubsidyOn((v) => !v)}
+              className={`relative h-5 w-9 rounded-full transition ${subsidyOn ? "bg-ok" : "bg-slate-300"}`}
+            >
+              <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white transition ${subsidyOn ? "left-4" : "left-0.5"}`} />
+            </button>
+          </label>
+        </div>
+        <div className="mt-1 text-xs text-slate-400">2024 정부지원 기준 · 표 값을 근거로 자부담·회수기간·25년 순이익을 계산합니다.</div>
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          {COST.map((c) => {
+            const self = subsidyOn ? c.selfWith : c.selfWithout; // 만원
+            const payback = c.saveYear > 0 ? self / c.saveYear : Infinity; // 년
+            const net25 = c.saveYear * 25 - self; // 만원
+            return (
+              <div key={c.name} className="rounded-xl border border-slate-200 p-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">{c.emoji}</span>
+                  <div>
+                    <div className="font-bold">{c.name} <span className="text-xs font-normal text-slate-400">· {c.spec}</span></div>
+                    <div className="text-xs text-slate-400">{c.fit}</div>
+                  </div>
+                </div>
+                <div className="mt-3 space-y-1.5 text-sm">
+                  <Row k="총 설치비" v={c.install} />
+                  <Row k="보조금" v={c.subsidy} />
+                  <Row k={`자부담 (${subsidyOn ? "보조금 수령" : "미수령"})`} v={`약 ${self}만원`} strong />
+                  <Row k="월 발전량" v={c.genMonth} />
+                  <Row k="연 절감액" v={`약 ${c.saveYear}만원`} />
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  <div className="rounded-lg bg-amber-soft p-3 text-center">
+                    <div className="text-xs text-slate-500">투자 회수기간</div>
+                    <div className="text-lg font-extrabold text-amber">{isFinite(payback) ? `${payback.toFixed(1)}년` : "—"}</div>
+                  </div>
+                  <div className="rounded-lg bg-ok-soft p-3 text-center">
+                    <div className="text-xs text-slate-500">25년 누적 순이익</div>
+                    <div className="text-lg font-extrabold text-ok">{net25.toLocaleString()}만원</div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="mt-2 text-[11px] text-slate-400">
+          ※ 회수기간 = 자부담 ÷ 연 절감액 · 25년 순이익 = 연 절감액×25 − 자부담. 보조금·자부담은 지자체 지원 규모에 따라 범위 내에서 달라집니다.
+        </div>
+      </section>
 
       {/* 입력 */}
       <div className="card grid gap-5 p-5 md:grid-cols-2 lg:grid-cols-3">
@@ -238,6 +322,14 @@ function Mini({ label, value, sub, tone = "text-ink" }: { label: string; value: 
       <div className="text-xs text-slate-400">{label}</div>
       <div className={`text-lg font-bold ${tone}`}>{value}</div>
       {sub && <div className="text-xs text-slate-400">{sub}</div>}
+    </div>
+  );
+}
+function Row({ k, v, strong = false }: { k: string; v: string; strong?: boolean }) {
+  return (
+    <div className="flex items-start justify-between gap-3">
+      <span className="shrink-0 text-slate-400">{k}</span>
+      <span className={`text-right ${strong ? "font-bold text-ink" : "text-slate-600"}`}>{v}</span>
     </div>
   );
 }
