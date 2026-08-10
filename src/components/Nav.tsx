@@ -14,11 +14,11 @@ const LINKS = [
   { href: "/solar", label: "RE100 태양광" },
 ];
 
-// 정적 대시보드(public/dash/*.html) — Next 라우트가 아니라 <a>로 직접 연결
+// 대시보드를 포털 안(nav 유지)에서 여는 내부 페이지 — 각 페이지가 html을 iframe으로 품음
 const DASH_LINKS = [
-  { href: "/dash/benchmark.html", label: "데이터" },
-  { href: "/dash/forecast.html", label: "예측" },
-  { href: "/dash/pi-setup.html", label: "실증" },
+  { href: "/data", label: "데이터" },
+  { href: "/forecast", label: "예측" },
+  { href: "/deploy", label: "실증" },
 ];
 
 export default function Nav({ user }: { user: { name: string; role: string } }) {
@@ -46,9 +46,13 @@ export default function Nav({ user }: { user: { name: string; role: string } }) 
           ))}
           <span className="mx-1 h-4 w-px bg-slate-200" aria-hidden />
           {DASH_LINKS.map((l) => (
-            <a key={l.href} href={l.href} className="navlink text-teal-700">
+            <Link
+              key={l.href}
+              href={l.href}
+              className={`navlink text-teal-700 ${active(l.href) ? "navlink-active" : ""}`}
+            >
               {l.label}
-            </a>
+            </Link>
           ))}
         </nav>
         <div className="flex items-center gap-2">
