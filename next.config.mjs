@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-const repo = "keti-wattwise-demo"; // GitHub Pages 하위경로
+const repo = "keti-wattwise-2026"; // GitHub Pages 하위경로
 const nextConfig = {
   output: "export",
   basePath: `/${repo}`,
