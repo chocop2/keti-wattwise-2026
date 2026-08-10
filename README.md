@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WattWise · 온디바이스 전력 예측·이상감지 비서
 
-## Getting Started
+> **2026 KETI AI 융합 응용기술 아이디어 경진대회** · 고려대 팀 · 멘토 조인표 연구원
+> 확률 예측 기반 온디바이스 전력 비서 (Raspberry Pi 5)
 
-First, run the development server:
+### 🔗 라이브 데모
+**https://chocop2.github.io/keti-wattwise-2026/**
+(설치·로그인 없이 링크만 열면 됩니다)
+
+---
+
+## 한 줄 소개
+
+> **"남들은 kWh를 점으로 예측하지만, 우리는 확률분포로 예측한다."**
+
+소형 SBC 한 대에서 시계열 예측 모델과 경량 LLM을 동시에 구동해, 외부 서버 없이 가정 내부에서
+**요금 예측 · 누진제 경고 · 절전 상담**과 **고령 1인가구 안부(이상감지)**까지 완결되는 온디바이스 AI 비서.
+
+가구별 확률 부하 모델 **하나**가 4개 기능을 묶습니다:
+
+| 기능 | 확률 레이어에서 나오는 방식 |
+| --- | --- |
+| 안부 이상 감지 | 관측이 예측 분포 하위 분위 밖 이탈 → 이상 확률 + 신뢰도 |
+| 누진 자동조종 | 월말 누적 분포 → 구간 초과 확률("3구간 진입 73%") |
+| 가전별 분해 | 총량을 가전 단위로 분해 + 확신도 |
+| 태양광 경제성 | 발전량 불확실성 전파 → 회수기간 구간 추정 |
+
+---
+
+## 페이지 구성 (10개 메뉴)
+
+| 메뉴 | 내용 |
+| --- | --- |
+| 소개 | 프로젝트 개요·아키텍처 |
+| 아이디어 / 이슈·할일 / 게시판 | 팀 협업 보드 |
+| 스마트홈 진단 | 가정별 전력·이상감지 데모 |
+| 전력 분석 | 사용량 분석 대시보드 |
+| RE100 태양광 | 건물별 일조·발전 잠재량 3D 지도, 설치 손익 계산 |
+| **데이터** | 89가구 실측 전력 벤치마크 |
+| **예측** | 모델 4종(WattCast·GBM·NGBoost 등) + 분위수 밴드 |
+| **실증** | Pi 5 + CT 센서 구성도 |
+
+---
+
+## 로컬에서 실행하기
 
 ```bash
+git clone https://github.com/chocop2/keti-wattwise-2026
+cd keti-wattwise-2026
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# → http://localhost:3000  (로그인: korea_03 / korea)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> 경로에 대괄호·공백이 있으면 Next.js가 깨질 수 있어요. `~/keti-wattwise` 같은 단순 경로에서 실행하세요.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 기술 스택
 
-## Learn More
+- **Next.js 14** (App Router) · TypeScript · Tailwind CSS
+- 차트 **Recharts** · 3D 지도 **deck.gl + maplibre**
+- 태양 기하학(`src/lib/solarpv.ts`) 실제 구현 · 나머지 예측·챗봇은 데모(합성/규칙 기반)
+- 정적 배포: `output: export` → **GitHub Pages** (`gh-pages` 브랜치)
 
-To learn more about Next.js, take a look at the following resources:
+## 폴더 구조
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/app/(portal)/…   각 메뉴 페이지
+src/components/       공용 컴포넌트(Nav 등)
+src/lib/             데이터·인증·태양광 등 로직
+public/dash/         자체완결 대시보드 HTML(더블클릭 가능)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 브랜치
 
-## Deploy on Vercel
+- `master` — 소스(동적 앱, 로그인·글쓰기 포함)
+- `gh-pages` — 배포용 정적 사이트(로그인 없이 열람 전용)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*발표·시연용 데모입니다. 예측 모델·데이터는 개발 단계이며, 계정(korea_03)은 데모용입니다.*
