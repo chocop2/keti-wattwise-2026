@@ -14,6 +14,13 @@ const LINKS = [
   { href: "/solar", label: "RE100 태양광" },
 ];
 
+// 정적 대시보드(public/dash/*.html) — Next 라우트가 아니라 <a>로 직접 연결
+const DASH_LINKS = [
+  { href: "/dash/benchmark.html", label: "데이터" },
+  { href: "/dash/forecast.html", label: "예측" },
+  { href: "/dash/pi-setup.html", label: "실증" },
+];
+
 export default function Nav({ user }: { user: { name: string; role: string } }) {
   const path = usePathname();
   const active = (href: string) =>
@@ -36,6 +43,12 @@ export default function Nav({ user }: { user: { name: string; role: string } }) 
             >
               {l.label}
             </Link>
+          ))}
+          <span className="mx-1 h-4 w-px bg-slate-200" aria-hidden />
+          {DASH_LINKS.map((l) => (
+            <a key={l.href} href={l.href} className="navlink text-teal-700">
+              {l.label}
+            </a>
           ))}
         </nav>
         <div className="flex items-center gap-2">
