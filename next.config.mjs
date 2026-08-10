@@ -4,6 +4,7 @@ const nextConfig = {
   output: "export",
   basePath: `/${repo}`,
   assetPrefix: `/${repo}/`,
+  env: { NEXT_PUBLIC_BASE_PATH: `/${repo}` },
   images: { unoptimized: true },
   trailingSlash: true,
   eslint: { ignoreDuringBuilds: true },
