@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { logout } from "@/app/login/actions";
 
 const LINKS = [
   { href: "/", label: "소개" },
@@ -59,9 +58,6 @@ export default function Nav({ user }: { user: { name: string; role: string } }) 
           <span className="hidden text-xs text-slate-500 sm:inline">
             {user.role} · {user.name}
           </span>
-          <form action={logout}>
-            <button className="btn-ghost !px-2.5 !py-1 text-xs">로그아웃</button>
-          </form>
         </div>
       </div>
     </header>

@@ -35,12 +35,12 @@ export default function IssuesPage() {
                         {it.assignee && <span className="text-xs text-slate-400">{it.assignee}</span>}
                       </div>
                       <div className="flex gap-1">
-                        <form action={moveIssue}>
+                        <form>
                           <input type="hidden" name="id" value={it.id} />
                           <input type="hidden" name="dir" value="prev" />
                           <button className="rounded border border-slate-200 px-1.5 text-xs text-slate-400 hover:bg-slate-50" disabled={lane.key === "todo"}>◀</button>
                         </form>
-                        <form action={moveIssue}>
+                        <form>
                           <input type="hidden" name="id" value={it.id} />
                           <input type="hidden" name="dir" value="next" />
                           <button className="rounded border border-slate-200 px-1.5 text-xs text-slate-400 hover:bg-slate-50" disabled={lane.key === "done"}>▶</button>
@@ -58,7 +58,7 @@ export default function IssuesPage() {
 
       <details className="card p-5">
         <summary className="cursor-pointer text-sm font-semibold">＋ 새 이슈 추가</summary>
-        <form action={addIssue} className="mt-4 flex flex-wrap gap-2">
+        <form className="mt-4 flex flex-wrap gap-2">
           <input name="title" className="input flex-1" placeholder="할 일 제목" required />
           <input name="assignee" className="input w-32" placeholder="담당자" />
           <input name="tag" className="input w-28" placeholder="태그" />

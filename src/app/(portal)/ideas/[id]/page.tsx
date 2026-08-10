@@ -5,6 +5,10 @@ import { voteIdea, addComment, setIdeaStatus } from "@/lib/actions";
 
 const STATUSES = ["열림", "검토중", "채택", "보류"] as const;
 
+export function generateStaticParams() {
+  return getDB().ideas.map((i) => ({ id: String(i.id) }));
+}
+
 export default function IdeaDetail({ params }: { params: { id: string } }) {
   const it = getDB().ideas.find((x) => x.id === Number(params.id));
   if (!it) notFound();
@@ -24,11 +28,11 @@ export default function IdeaDetail({ params }: { params: { id: string } }) {
         <p className="mt-4 whitespace-pre-wrap leading-relaxed text-slate-700">{it.body}</p>
 
         <div className="mt-5 flex items-center gap-3">
-          <form action={voteIdea}>
+          <form>
             <input type="hidden" name="id" value={it.id} />
             <button className="btn-ghost">▲ 추천 {it.votes}</button>
           </form>
-          <form action={setIdeaStatus} className="flex items-center gap-2">
+          <form className="flex items-center gap-2">
             <input type="hidden" name="id" value={it.id} />
             <span className="text-xs text-slate-400">상태:</span>
             {STATUSES.map((s) => (
@@ -51,7 +55,7 @@ export default function IdeaDetail({ params }: { params: { id: string } }) {
           ))}
           {it.comments.length === 0 && <p className="text-sm text-slate-400">첫 댓글을 남겨보세요.</p>}
         </div>
-        <form action={addComment} className="mt-4 flex gap-2">
+        <form className="mt-4 flex gap-2">
           <input type="hidden" name="id" value={it.id} />
           <input name="body" className="input" placeholder="댓글 작성" required />
           <button className="btn-primary shrink-0">등록</button>

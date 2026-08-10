@@ -23,7 +23,7 @@ export default function IdeasPage() {
       <div className="space-y-3">
         {ideas.map((it) => (
           <div key={it.id} className="card flex gap-4 p-4">
-            <form action={voteIdea}>
+            <form>
               <input type="hidden" name="id" value={it.id} />
               <button className="flex h-14 w-12 flex-col items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:border-amber hover:text-amber">
                 <span className="text-xs">▲</span>
@@ -51,7 +51,7 @@ export default function IdeasPage() {
 
       <details className="card p-5">
         <summary className="cursor-pointer text-sm font-semibold text-ink">＋ 새 아이디어 제안하기</summary>
-        <form action={addIdea} className="mt-4 space-y-3">
+        <form className="mt-4 space-y-3">
           <input name="title" className="input" placeholder="제목" required />
           <textarea name="body" className="input min-h-24" placeholder="설명" />
           <input name="tags" className="input" placeholder="태그 (쉼표로 구분: UX, 누진제)" />

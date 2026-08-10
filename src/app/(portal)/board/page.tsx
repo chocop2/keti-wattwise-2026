@@ -25,7 +25,7 @@ export default function BoardPage() {
 
       <details className="card p-5">
         <summary className="cursor-pointer text-sm font-semibold">＋ 글쓰기</summary>
-        <form action={addPost} className="mt-4 space-y-3">
+        <form className="mt-4 space-y-3">
           <input name="title" className="input" placeholder="제목" required />
           <textarea name="body" className="input min-h-24" placeholder="내용 (마크다운 지원 예정)" />
           <button className="btn-primary">등록</button>
