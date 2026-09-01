@@ -6,19 +6,18 @@ import { logout } from "@/app/login/actions";
 
 const LINKS = [
   { href: "/", label: "소개" },
-  { href: "/ideas", label: "아이디어" },
-  { href: "/issues", label: "이슈/할일" },
-  { href: "/board", label: "게시판" },
+  { href: "/why", label: "필요성" },
+  { href: "/anomaly", label: "이상탐지" },
   { href: "/households", label: "스마트홈 진단" },
   { href: "/analytics", label: "전력 분석" },
-  { href: "/solar", label: "RE100 태양광" },
+  { href: "/solar", label: "태양광·거래" },
 ];
 
-// 대시보드를 포털 안(nav 유지)에서 여는 내부 페이지 — 각 페이지가 html을 iframe으로 품음
+// 대시보드/실증 — 포털 안에서 여는 내부 페이지
 const DASH_LINKS = [
   { href: "/data", label: "데이터" },
   { href: "/forecast", label: "예측" },
-  { href: "/deploy", label: "실증" },
+  { href: "/deploy", label: "자취방 실증" },
 ];
 
 export default function Nav({ user }: { user: { name: string; role: string } }) {
