@@ -40,9 +40,9 @@ export default function HouseholdsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="section-title">🏠 스마트홈 진단 — 가정별 전력·이상감지</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          가정을 선택하면 가전별 사용량을 뜯어보고, 통합 전력량·요금과 절약 포인트를 챗봇에게 물어볼 수 있어요. 모든 수치는 정격전력×사용시간 기반 추정입니다.
+        <h1 className="section-title">🏠 스마트홈 진단</h1>
+        <p className="section-sub">
+          가정을 선택하면 가전별 사용량을 살펴보고, 통합 전력량·요금과 절약 포인트를 챗봇에게 물어볼 수 있습니다. 모든 수치는 정격전력×사용시간 기반 추정입니다.
         </p>
       </div>
 
@@ -151,7 +151,7 @@ function Detail({ c, onBack }: { c: HouseholdCalc; onBack: () => void }) {
 
   return (
     <div className="space-y-6">
-      <button onClick={onBack} className="text-sm text-slate-500 hover:underline">← 가정 목록</button>
+      <button onClick={onBack} className="text-sm text-sage/80 hover:underline">← 가정 목록</button>
 
       <div className="card flex flex-wrap items-center gap-4 p-6">
         <div className="text-4xl">{c.hh.emoji}</div>

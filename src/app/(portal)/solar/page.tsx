@@ -107,9 +107,9 @@ export default function SolarPage() {
     <div className="space-y-6">
       <div>
         <h1 className="section-title">☀️ RE100 태양광 시뮬레이터</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          위치·경사·방위에 따른 발전량을 추정하고, 자가소비 절감 + 잉여 전력 판매(전력거래) 수익으로 <b>RE100 달성률·손익분기</b>를 계산합니다.
-          <span className="ml-1 text-slate-400">모델: pvlib 방법론(청천일사·경사면 전이·PVWatts) 간이 구현.</span>
+        <p className="section-sub">
+          위치·경사·방위에 따른 발전량을 추정하고, 자가소비 절감 + 잉여 전력 판매(전력거래) 수익으로 <b className="text-white">RE100 달성률·손익분기</b>를 계산합니다.
+          <span className="ml-1 text-sage/50">모델: pvlib 방법론(청천일사·경사면 전이·PVWatts) 간이 구현.</span>
         </p>
       </div>
 

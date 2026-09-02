@@ -2,7 +2,7 @@ import Link from "next/link";
 
 function Photo({ label, h = "h-44" }: { label: string; h?: string }) {
   return (
-    <div className={`flex ${h} w-full items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 text-center text-sm text-slate-400`}>
+    <div className={`flex ${h} w-full items-center justify-center rounded-xl border border-dashed border-white/25 bg-white/5 text-center text-sm text-sage/60`}>
       <div>
         <div className="text-2xl">📷</div>
         <div className="mt-1">{label}</div>
@@ -15,40 +15,64 @@ const CASES = [
   {
     icon: "💶",
     title: "유럽·영국은 이미 되판다",
-    body: "요금이 30분마다 바뀌고, 남는 태양광 전기는 비쌀 때 되팝니다. 전기가 남아도는 날에는 요금이 마이너스가 되어, 오히려 돈을 받고 쓰기도 합니다.",
+    body: "요금이 30분 단위로 바뀌어 쌀 때 쓰고, 남는 태양광 전기는 비쌀 때 되팝니다. 공급이 넘치는 날에는 요금이 마이너스가 되어, 오히려 보상을 받고 전기를 쓰기도 합니다.",
     tag: "실시간 요금 · 양방향 거래",
   },
   {
     icon: "☀️",
-    title: "태양광이 있으면 수익이 된다",
-    body: "가정용 태양광이 늘면서, 남는 전기를 언제 파느냐가 곧 수익으로 이어집니다. 설치 후 몇 년이면 본전을 회수하는지, 언제 파는 것이 이득인지 계산해 주는 도구가 필요합니다.",
+    title: "태양광은 수익 자산이 된다",
+    body: "가정용 태양광이 확대되면서, 남는 전기를 언제 파느냐가 곧 수익으로 이어집니다. 투자 회수 시점과 최적 판매 시점을 계산해 주는 도구가 필요합니다.",
     tag: "발전 · 자가소비 · 판매",
   },
   {
     icon: "📡",
-    title: "한국은 계량기가 이미 깔렸다",
-    body: "스마트미터가 2024년 전국 2,005만 호에 보급을 마쳤습니다. 데이터는 이미 흐르고 있지만, 정작 가정에서 이를 활용해 사고팔도록 돕는 도구는 아직 없습니다.",
-    tag: "인프라는 완비, 도구는 부재",
+    title: "한국도 기반은 갖춰졌다",
+    body: "한국전력의 지능형 원격검침 인프라(AMI)가 2024년 전국 약 2,005만 호에 구축을 마치며 실시간 전력 데이터 기반이 마련됐습니다. 다만 이 데이터를 가정이 직접 거래·절감에 활용하도록 돕는 서비스는 아직 부족합니다.",
+    tag: "AMI 전국 구축 완료",
+  },
+];
+
+const ROLES = [
+  {
+    eng: "Trade",
+    color: "text-amber",
+    border: "border-amber",
+    title: "쌀 때 사서, 비쌀 때 팝니다",
+    body: "실시간 요금과 태양광 발전량을 미리 예측해, 충전과 판매 시점을 자동으로 정합니다.",
+  },
+  {
+    eng: "Save",
+    color: "text-teal",
+    border: "border-teal",
+    title: "누진 구간을 넘기 전에 알립니다",
+    body: "이번 달 사용량을 미리 예측하고, 누진 구간 초과가 예상되면 미리 알려 드립니다.",
+  },
+  {
+    eng: "Protect",
+    color: "text-danger",
+    border: "border-danger",
+    title: "이상 신호를 놓치지 않습니다",
+    body: "평소 패턴을 학습해 이상을 감지하면 알립니다. 출장·여행처럼 정상인 경우는 사후에 확인합니다.",
   },
 ];
 
 export default function Home() {
   return (
-    <div className="space-y-10">
-      {/* 히어로 */}
-      <section className="card overflow-hidden">
-        <div className="grid gap-6 p-8 md:grid-cols-[1.4fr_1fr] md:p-10">
-          <div className="self-center">
-            <div className="badge bg-amber-soft text-amber">
+    <div className="space-y-12">
+      {/* 히어로 — 자연 패널 */}
+      <section className="hero-nature rounded-3xl border border-white/10 shadow-pop">
+        <div className="relative z-10 grid gap-6 p-8 md:grid-cols-[1.45fr_1fr] md:p-12">
+          <div className="self-center text-white">
+            <div className="badge bg-white/10 text-mint">
               ① 사회문제 해결을 위한 AI · 융합·응용기술 아이디어
             </div>
-            <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight md:text-[2.6rem]">
+            <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight md:text-[2.7rem]">
               전기를 <span className="text-amber">사고팔고</span>, 아끼고,{" "}
-              <span className="text-teal">지켜주는</span>
+              <span className="text-mint">지켜주는</span>
               <br />
               집 안의 전력 비서
             </h1>
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-600">
+            <p className="mt-5 max-w-xl text-sm leading-relaxed text-sage/85">
               라즈베리파이 한 대만 두면, 전기가 쌀 때 쓰고 남는 태양광은 비쌀 때 파는 것까지 알아서 관리합니다.
               혼자 사는 집이라면 이상 신호도 함께 살핍니다. 모든 데이터는 집 밖으로 나가지 않습니다.
             </p>
@@ -58,15 +82,18 @@ export default function Home() {
               <Link href="/anomaly" className="btn-ghost">이상탐지 방법</Link>
             </div>
           </div>
-          <Photo label="대표 이미지(전력 거래·태양광) 자리" h="h-full" />
+          <div className="self-center rounded-2xl border border-white/15 bg-black/15 p-1.5 backdrop-blur-sm">
+            <Photo label="자연·태양광 대표 사진 자리" h="h-56 md:h-full" />
+          </div>
         </div>
       </section>
 
       {/* 전력은 이제 사고파는 것 */}
       <section>
+        <div className="eyebrow">The Shift</div>
         <h2 className="section-title">전기는 이제 쓰기만 하는 대상이 아닙니다</h2>
-        <p className="mt-1 text-sm text-slate-500">
-          해외에서는 이미 집집마다 전기를 사고팝니다. 한국도 재생에너지가 늘고 요금제가 바뀌면서 같은 방향으로 가고 있습니다.
+        <p className="section-sub">
+          해외에서는 이미 가정 단위로 전기를 사고팝니다. 한국도 재생에너지 확대와 요금제 개편으로 같은 방향을 향하고 있습니다.
         </p>
         <div className="mt-5 grid gap-4 md:grid-cols-3">
           {CASES.map((c) => (
@@ -81,49 +108,39 @@ export default function Home() {
           ))}
         </div>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
-          <Photo label="유럽 실시간 요금 / 전력거래 뉴스 캡처 자리" />
+          <Photo label="유럽 실시간 요금 / 전력거래 사진 자리" />
           <Photo label="가정 태양광 · 잉여 판매 사례 사진 자리" />
         </div>
       </section>
 
-      {/* 3대 가치 */}
+      {/* What We Do */}
       <section>
-        <h2 className="section-title">우리가 제공하는 세 가지 가치</h2>
+        <div className="eyebrow">What We Do</div>
+        <h2 className="section-title">한 대의 라즈베리파이가 맡는 세 가지 역할</h2>
+        <p className="section-sub">거래로 벌고, 예측으로 아끼고, 이상탐지로 지킵니다.</p>
         <div className="mt-5 grid gap-4 md:grid-cols-3">
-          <div className="card border-t-4 border-amber p-6">
-            <div className="text-2xl">🔁</div>
-            <div className="mt-2 font-bold text-amber">거래 · 쌀 때 사고 비쌀 때 판다</div>
-            <p className="mt-1 text-sm text-slate-500">
-              요금과 태양광 발전량을 미리 예측해, 언제 충전하고 언제 팔지를 자동으로 판단합니다.
-            </p>
-          </div>
-          <div className="card border-t-4 border-teal p-6">
-            <div className="text-2xl">💡</div>
-            <div className="mt-2 font-bold text-teal">절감 · 누진 넘기기 전에 알린다</div>
-            <p className="mt-1 text-sm text-slate-500">
-              이번 달 사용량을 미리 예측하고, 누진 구간을 넘길 것으로 보이면 미리 알려 드립니다.
-            </p>
-          </div>
-          <div className="card border-t-4 border-danger p-6">
-            <div className="text-2xl">🛡️</div>
-            <div className="mt-2 font-bold text-danger">안전 · 이상 신호를 잡아낸다</div>
-            <p className="mt-1 text-sm text-slate-500">
-              평소 패턴을 학습해 두고 이상이 감지되면 알림을 보냅니다. 출장·여행처럼 정상인 경우는 사후에 확인합니다.
-            </p>
-          </div>
+          {ROLES.map((r) => (
+            <div key={r.eng} className={`card border-t-4 p-6 ${r.border}`}>
+              <div className={`text-xs font-bold uppercase tracking-[0.18em] ${r.color}`}>{r.eng}</div>
+              <div className="mt-2 text-[1.05rem] font-bold text-ink">{r.title}</div>
+              <p className="mt-1.5 text-sm leading-relaxed text-slate-500">{r.body}</p>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* 미래 트렌드 배너 */}
-      <section className="card bg-ink p-8 text-white">
-        <div className="text-sm font-semibold text-amber">앞으로</div>
-        <p className="mt-2 max-w-3xl text-lg font-bold leading-snug">
-          전기를 사고파는 일은 점점 흔해집니다. 그때 가정에서 알아서 거래하고 관리해 주는 도구가 있다면, 누구나 손쉽게 참여할 수 있습니다.
-        </p>
-        <div className="mt-4">
-          <Link href="/why" className="inline-block rounded-lg bg-amber px-4 py-2 text-sm font-bold text-ink">
-            왜 필요한지 보기 →
-          </Link>
+      <section className="hero-nature rounded-2xl border border-white/10 p-8 shadow-pop">
+        <div className="relative z-10">
+          <div className="eyebrow">Looking Ahead</div>
+          <p className="max-w-3xl text-lg font-bold leading-snug text-white">
+            전기를 사고파는 일은 점점 일상이 됩니다. 그때 가정에서 알아서 거래하고 관리해 주는 도구가 있다면, 누구나 손쉽게 참여할 수 있습니다.
+          </p>
+          <div className="mt-4">
+            <Link href="/why" className="inline-block rounded-lg bg-amber px-4 py-2 text-sm font-bold text-white">
+              왜 필요한지 보기 →
+            </Link>
+          </div>
         </div>
       </section>
     </div>

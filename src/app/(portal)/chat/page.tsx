@@ -25,9 +25,9 @@ export default function ChatPage() {
     <div className="mx-auto max-w-3xl">
       <div className="mb-4">
         <div className="badge bg-teal-soft text-teal">챗봇</div>
-        <h1 className="mt-3 text-2xl font-extrabold">WattWise 도우미</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          프로젝트에 대해 물어보세요. 지식기반(규칙형)이라 서버 없이 바로 답합니다 — 실제 LLM 연동은 다음 단계.
+        <h1 className="mt-3 text-2xl font-extrabold text-white">WattWise 도우미</h1>
+        <p className="mt-1 text-sm text-sage/70">
+          프로젝트에 대해 물어보세요. 지식기반(규칙형)이라 서버 없이 바로 답합니다. 실제 LLM 연동은 다음 단계입니다.
         </p>
       </div>
 

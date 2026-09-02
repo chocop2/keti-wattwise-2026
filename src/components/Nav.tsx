@@ -27,13 +27,13 @@ export default function Nav({ user }: { user: { name: string; role: string } }) 
     href === "/" ? path === "/" : path.startsWith(href);
   const devActive = DEV_LINKS.some((l) => path.startsWith(l.href));
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/85 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-forest-800/80 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-6xl items-center gap-1 px-4">
         <Link href="/" className="mr-2 flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-ink text-xs font-black text-white">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-leaf text-xs font-black text-white">
             W
           </div>
-          <span className="text-sm font-extrabold tracking-tight">WattWisePi</span>
+          <span className="text-sm font-extrabold tracking-tight text-white">WattWisePi</span>
         </Link>
         <nav className="flex flex-1 flex-wrap items-center gap-0.5">
           {LINKS.map((l) => (
@@ -51,15 +51,15 @@ export default function Nav({ user }: { user: { name: string; role: string } }) 
               개발 과정 ▾
             </button>
             <div className="absolute left-0 top-full z-50 hidden min-w-[150px] pt-1 group-hover:block">
-              <div className="rounded-xl border border-slate-200 bg-white p-1 shadow-lg">
+              <div className="rounded-xl border border-white/10 bg-forest-700 p-1 shadow-pop">
                 {DEV_LINKS.map((l) => (
                   <Link
                     key={l.href}
                     href={l.href}
                     className={`block rounded-lg px-3 py-2 text-sm ${
                       active(l.href)
-                        ? "bg-slate-100 font-semibold text-ink"
-                        : "text-slate-600 hover:bg-slate-50"
+                        ? "bg-white/10 font-semibold text-white"
+                        : "text-sage/80 hover:bg-white/10 hover:text-white"
                     }`}
                   >
                     {l.label}
@@ -70,7 +70,7 @@ export default function Nav({ user }: { user: { name: string; role: string } }) 
           </div>
         </nav>
         <div className="flex items-center gap-2">
-          <span className="hidden text-xs text-slate-500 sm:inline">
+          <span className="hidden text-xs text-sage/60 sm:inline">
             {user.role} · {user.name}
           </span>
           <form action={logout}>

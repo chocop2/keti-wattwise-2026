@@ -1,6 +1,6 @@
 function Photo({ label, h = "h-44" }: { label: string; h?: string }) {
   return (
-    <div className={`flex ${h} w-full items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 text-center text-sm text-slate-400`}>
+    <div className={`flex ${h} w-full items-center justify-center rounded-xl border border-dashed border-white/25 bg-white/5 text-center text-sm text-sage/60`}>
       <div>
         <div className="text-2xl">📷</div>
         <div className="mt-1">{label}</div>
@@ -11,71 +11,75 @@ function Photo({ label, h = "h-44" }: { label: string; h?: string }) {
 
 export default function WhyPage() {
   return (
-    <div className="space-y-10">
-      {/* 헤더 */}
-      <section className="card overflow-hidden">
-        <div className="p-8 md:p-10">
-          <div className="badge bg-amber-soft text-amber">왜 지금, 왜 이 방법인가</div>
-          <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight md:text-4xl">
+    <div className="space-y-12">
+      {/* 헤더 — 자연 패널 */}
+      <section className="hero-nature rounded-3xl border border-white/10 shadow-pop">
+        <div className="relative z-10 p-8 md:p-12">
+          <div className="badge bg-white/10 text-mint">왜 지금, 왜 이 방법인가</div>
+          <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight text-white md:text-4xl">
             필요성
           </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-600">
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-sage/85">
             전기는 이제 쓰기만 하는 대상이 아니라, 사고팔고 아끼고 위험을 읽어 내는 대상이 되고 있습니다.
-            이 서비스가 왜 필요한지를 <b>정책 측면</b>(전력시장이 향하는 방향)과 <b>기술 측면</b>(왜 오토인코더인가)으로 나누어 정리했습니다.
+            이 서비스가 왜 필요한지를 정책 측면(전력시장이 향하는 방향)과 기술 측면(왜 오토인코더인가)으로 나누어 정리했습니다.
           </p>
         </div>
       </section>
 
       {/* 1. 정책적 필요성 */}
       <section>
-        <h2 className="section-title">정책 측면 — 전기를 거래하는 시대</h2>
-        <p className="mt-1 text-sm text-slate-500">집에서 전기를 사고파는 시대이지만, 정작 가정이 쓸 도구는 없습니다.</p>
+        <div className="eyebrow">Policy</div>
+        <h2 className="section-title">전기를 거래하는 시대가 온다</h2>
+        <p className="section-sub">집에서 전기를 사고파는 시대이지만, 정작 가정이 쓸 도구는 없습니다.</p>
 
         <div className="mt-5 grid gap-4 md:grid-cols-3">
           <div className="card p-5">
             <div className="text-2xl">🇪🇺</div>
             <div className="mt-2 font-bold">유럽·영국은 이미 거래 중</div>
             <p className="mt-1 text-sm text-slate-500">
-              요금이 30분마다 바뀌어 쌀 때 쓰고, 남는 태양광은 비쌀 때 되팝니다.
-              전기가 남는 날에는 요금이 마이너스가 되어, 오히려 돈을 받고 쓰기도 합니다.
+              요금이 30분 단위로 바뀌어 쌀 때 쓰고, 남는 태양광은 비쌀 때 되팝니다.
+              공급이 넘치는 날에는 요금이 마이너스가 되어 오히려 보상을 받고 쓰기도 합니다.
             </p>
           </div>
           <div className="card p-5">
             <div className="text-2xl">📈</div>
             <div className="mt-2 font-bold">한국도 같은 방향으로</div>
             <p className="mt-1 text-sm text-slate-500">
-              재생에너지가 늘고 요금제도 바뀌고 있습니다. 스마트미터도 2024년 전국 2,005만 호에 보급을 마쳤습니다.
-              실시간 요금·양방향 거래로 갈 기반은 갖춰진 셈입니다.
+              재생에너지가 확대되고 요금제도 개편되고 있습니다. 지능형 원격검침 인프라(AMI)도 2024년 전국 약 2,005만 호에 구축을 마쳐,
+              실시간 요금·양방향 거래의 기반이 갖춰졌습니다.
             </p>
           </div>
           <div className="card p-5">
             <div className="mt-0 text-2xl">🏠</div>
             <div className="mt-2 font-bold">그런데 정작 쓸 도구가 없다</div>
             <p className="mt-1 text-sm text-slate-500">
-              데이터는 이미 있지만, 언제 사고 언제 팔지를 가정에서 판단할 방법이 없습니다.
+              데이터는 이미 흐르지만, 언제 사고 언제 팔지를 가정에서 판단할 방법이 없습니다.
               폭염 누진에 취약한 1인·저소득 가구일수록 이 격차가 큽니다.
             </p>
           </div>
         </div>
 
         <div className="mt-4 grid gap-4 md:grid-cols-[1.2fr_1fr]">
-          <div className="card bg-ink p-6 text-white">
-            <p className="text-lg font-bold leading-snug">
-              그래서 <span className="text-amber">쌀 때 사고 비쌀 때 파는 판단</span>을,
-              집집마다 라즈베리파이가 알아서 내리도록 하는 것이 목표입니다.
-            </p>
-            <p className="mt-3 text-xs text-white/70">
-              태양광 판매, 누진 회피, 요금 절감을 한 번에. 취약계층 요금 부담과 냉방 문제 해소로도 이어집니다.
-            </p>
+          <div className="hero-nature rounded-2xl border border-white/10 p-6">
+            <div className="relative z-10">
+              <p className="text-lg font-bold leading-snug text-white">
+                그래서 <span className="text-amber">쌀 때 사고 비쌀 때 파는 판단</span>을,
+                집집마다 라즈베리파이가 알아서 내리도록 하는 것이 목표입니다.
+              </p>
+              <p className="mt-3 text-xs text-sage/75">
+                태양광 판매, 누진 회피, 요금 절감을 한 번에. 취약계층의 요금 부담과 냉방 문제 해소로도 이어집니다.
+              </p>
+            </div>
           </div>
-          <Photo label="유럽 전력 실시간 요금 / 뉴스 캡처 자리" h="h-full" />
+          <Photo label="유럽 전력 실시간 요금 / 태양광 사진 자리" h="h-full" />
         </div>
       </section>
 
       {/* 2. 방법론적 필요성 */}
       <section>
-        <h2 className="section-title">기술 측면 — 왜 오토인코더인가</h2>
-        <p className="mt-1 text-sm text-slate-500">응급·이상 상황은 정답이 붙어 있지 않기 때문에, 정상만 학습하는 방식이 적합합니다.</p>
+        <div className="eyebrow">Method</div>
+        <h2 className="section-title">왜 오토인코더인가</h2>
+        <p className="section-sub">응급·이상 상황은 정답이 붙어 있지 않기 때문에, 정상만 학습하는 방식이 적합합니다.</p>
 
         <div className="mt-5 grid gap-4 md:grid-cols-2">
           <div className="card p-6">

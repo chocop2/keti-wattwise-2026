@@ -5,8 +5,8 @@ export default function DataPage() {
     <section className="space-y-3">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold">데이터 벤치마크</h1>
-          <p className="text-sm text-slate-500">89가구 실측 전력 데이터 탐색 — 패턴·분포·계절성</p>
+          <h1 className="text-2xl font-extrabold text-white">데이터 벤치마크</h1>
+          <p className="text-sm text-sage/70">89가구 실측 전력 데이터 탐색 · 패턴·분포·계절성</p>
         </div>
         <a href={`${BP}/dash/benchmark.html`} target="_blank" rel="noreferrer" className="btn-ghost text-xs">새 창에서 열기 ↗</a>
       </div>
