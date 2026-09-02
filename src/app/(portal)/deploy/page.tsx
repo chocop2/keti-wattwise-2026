@@ -90,6 +90,20 @@ export default function DeployPage() {
         </div>
       </section>
 
+      {/* 실측 데이터 */}
+      <section>
+        <div className="eyebrow">Live Data</div>
+        <h2 className="section-title">실제로 이렇게 데이터가 쌓입니다</h2>
+        <p className="section-sub">라즈베리파이가 센서에서 읽은 전력값을 초 단위로 찍어 저장하는 실측 로그입니다.</p>
+        <figure className="mt-5 overflow-hidden rounded-xl border border-slate-200">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={`${BP}/deploy/data-log.jpg`} alt="라즈베리파이 실측 데이터 스트림 화면" className="w-full object-cover" />
+          <figcaption className="bg-white px-4 py-2 text-xs text-slate-500">
+            실제 수집 화면 · [2026-09-02 18:17:05] [Sensor 01] Power=0.2946 kWh …
+          </figcaption>
+        </figure>
+      </section>
+
       {/* 왜 실측인가 */}
       <section className="card bg-ink p-8 text-white">
         <div className="text-sm font-semibold text-amber">왜 직접 측정하는가</div>
