@@ -1,3 +1,5 @@
+const BP = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 function Photo({ label, h = "h-44" }: { label: string; h?: string }) {
   return (
     <div className={`flex ${h} w-full items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 text-center text-sm text-slate-400`}>
@@ -69,8 +71,10 @@ export default function WhyPage() {
               태양광 판매, 누진 회피, 요금 절감을 한 번에. 취약계층의 요금 부담과 냉방 문제 해소로도 이어집니다.
             </p>
           </div>
-          <Photo label="유럽 전력 실시간 요금 / 태양광 사진 자리" h="h-full" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={`${BP}/img/eu-solar.jpg`} alt="유럽 주택 지붕의 태양광 패널" className="h-full min-h-[220px] w-full rounded-xl border border-slate-200 object-cover" />
         </div>
+        <p className="mt-2 text-[11px] text-slate-400">이미지 · Marta Victoria · Wikimedia Commons (CC BY-SA 4.0)</p>
       </section>
 
       {/* 2. 방법론적 필요성 */}

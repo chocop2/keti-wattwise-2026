@@ -111,9 +111,14 @@ export default function Home() {
           ))}
         </div>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
-          <Photo label="유럽 실시간 요금 / 전력거래 사진 자리" />
-          <Photo label="가정 태양광 · 잉여 판매 사례 사진 자리" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={`${BP}/img/grid-sunset.jpg`} alt="해질녘 송전탑과 전력망" className="h-56 w-full rounded-xl border border-slate-200 object-cover" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={`${BP}/img/eu-solar.jpg`} alt="유럽 주택 지붕의 태양광 패널" className="h-56 w-full rounded-xl border border-slate-200 object-cover" />
         </div>
+        <p className="mt-2 text-[11px] text-slate-400">
+          이미지 · Novoklimov, Marta Victoria · Wikimedia Commons (CC BY 4.0 / CC BY-SA 4.0)
+        </p>
       </section>
 
       {/* What We Do */}
