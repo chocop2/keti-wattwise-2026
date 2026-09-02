@@ -35,9 +35,9 @@ export default function DeployPage() {
               자취방에서 <span className="text-amber">직접</span> 전력 데이터를 모읍니다
             </h1>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-600">
-              공개 데이터만 쓰지 않았습니다. 팀원이 <b>실제 자취방(1인가구)에 라즈베리파이와 CT센서를 설치</b>해
-              전력을 직접 계측하고, 그 위에서 예측·이상탐지·거래 알고리즘을 검증합니다.
-              한국 1인가구 고해상도 실측 데이터는 <b>우리만의 자산</b>입니다.
+              공개 데이터만 쓰진 않았어요. 팀원이 <b>실제 자취방에 라즈베리파이랑 CT센서를 달아서</b> 전기를 직접 재고 있어요.
+              이 데이터로 예측·이상탐지·거래가 진짜 집에서 되는지 확인합니다.
+              한국 1인가구를 이렇게 촘촘히 잰 데이터는 흔치 않고요.
             </p>
           </div>
           <Photo label="자취방 설치 전경 사진 자리" h="h-full" />
@@ -88,13 +88,13 @@ export default function DeployPage() {
 
       {/* 왜 실측인가 */}
       <section className="card bg-ink p-8 text-white">
-        <div className="text-sm font-semibold text-amber">왜 직접 재는가</div>
+        <div className="text-sm font-semibold text-amber">왜 직접 재냐면</div>
         <p className="mt-2 max-w-3xl text-lg font-bold leading-snug">
-          공개 데이터는 집계·과거의 것. 우리는 <span className="text-amber">지금·여기 1인가구</span>를 직접 재서,
-          예측이 진짜 실가정에서 작동하는지 증명합니다.
+          공개 데이터는 대개 예전 것이거나 뭉뚱그린 거예요. 우리는 <span className="text-amber">지금 우리 집</span>을 직접 재서,
+          예측이 실제로 잘 맞는지 확인합니다.
         </p>
         <p className="mt-3 text-xs text-white/70">
-          온디바이스 계측이라 전력 데이터(=생활 패턴)가 집 밖으로 나가지 않습니다 — 프라이버시까지 우리 방식의 강점.
+          게다가 집 안에서 재고 처리하니까, 생활 패턴이 담긴 전력 데이터가 밖으로 안 나가요. 프라이버시도 챙기는 셈이죠.
         </p>
       </section>
     </div>

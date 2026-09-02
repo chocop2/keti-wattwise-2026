@@ -33,11 +33,11 @@ export default function AnomalyPage() {
         <div className="p-8 md:p-10">
           <div className="badge bg-teal-soft text-teal">방법론</div>
           <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight md:text-4xl">
-            이상탐지 — <span className="text-teal">오토인코더</span>로 응급상황을 분류한다
+            이상탐지 · <span className="text-teal">오토인코더</span>로 위험 신호 잡기
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-600">
-            정답 라벨이 없는 문제에서, <b>&lsquo;정상&rsquo; 전력 패턴만 학습</b>해 벗어남을 잡습니다.
-            응급/정상/예외를 나누고, 예외(출장·여행)는 사후 알림으로 걸러 오탐을 줄입니다.
+            정답이 붙어있지 않은 문제라, <b>평소 전력 패턴만 배워서</b> 거기서 벗어나면 잡는 방식이에요.
+            정상·응급·예외로 나누고, 출장·여행 같은 예외는 나중에 확인받아서 헛알림을 줄입니다.
           </p>
         </div>
       </section>
@@ -86,10 +86,10 @@ export default function AnomalyPage() {
         </div>
         <div className="mt-4 grid gap-4 md:grid-cols-[1fr_1.1fr]">
           <div className="card p-6">
-            <div className="font-bold">왜 복원 오차가 이상 신호인가</div>
+            <div className="font-bold">왜 되살리기 오차가 이상 신호일까</div>
             <p className="mt-1 text-sm text-slate-500">
-              모델은 &lsquo;정상&rsquo;만 잘 복원하도록 학습됐다. TV·조명이 종일 켜진 채 방치되거나,
-              취사·활동 부하가 통째로 사라지면 <b>평소와 달라 복원이 크게 틀리고</b>, 그 오차가 이상 점수로 튄다.
+              모델은 평소 모습만 잘 되살리도록 배웠어요. 그러다 TV·조명이 종일 켜져 있거나 요리·활동이 뚝 끊기면,
+              평소랑 달라서 <b>되살리기가 확 어긋나요</b>. 그 어긋난 정도가 곧 이상 신호가 됩니다.
             </p>
           </div>
           <div className="card self-center p-3">
@@ -113,9 +113,9 @@ export default function AnomalyPage() {
         <div className="mt-4 card bg-ink p-6 text-white">
           <div className="text-sm font-semibold text-amber">오탐 설계</div>
           <p className="mt-1 text-sm leading-relaxed text-white/85">
-            예외(출장·여행)는 즉시 경보하지 않고 <b>사후 알림</b>으로 확인받는다. 예:
-            <i> &ldquo;3일간 사용량이 급감했어요. 외출 중이신가요?&rdquo;</i> — 오탐은 곧 복지 인력의 헛출동 비용이므로,
-            <b> 오탐률(FPR)</b>을 탐지 F1·리드타임과 함께 핵심 지표로 관리한다.
+            출장·여행 같은 예외는 바로 경보하지 않고 나중에 확인받아요. 예를 들면
+            <i> &ldquo;3일째 사용량이 확 줄었는데 외출 중이세요?&rdquo;</i> 하고요. 잘못 울리면 그만큼 복지 인력이 헛걸음하니까,
+            <b> 헛알림 비율(오탐률)</b>도 탐지 정확도·속도랑 같이 챙겨봅니다.
           </p>
           <div className="mt-4 flex flex-wrap gap-2 text-xs">
             <span className="chip bg-white/15 text-white">지표 · 탐지 F1</span>
@@ -129,8 +129,8 @@ export default function AnomalyPage() {
       <section>
         <h2 className="section-title">4. 실험 결과 — 합성 자취방 데이터로 검증 (PoC)</h2>
         <p className="mt-1 text-sm text-slate-500">
-          실측 데이터 확보 전, <b>1인가구 전력을 합성 생성</b>해 오토인코더를 학습하고 이상 4종을 주입해 성능을 확인했다.
-          (실데이터 검증은 다음 단계)
+          실제 데이터를 아직 다 못 모아서, <b>1인가구 전력을 비슷하게 만들어(합성)</b> 오토인코더를 학습시키고
+          이상 상황 4가지를 넣어 성능을 봤어요. 실측 검증은 다음 단계고요.
         </p>
         <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
           {[["F1 점수", "0.90"], ["재현율", "0.93"], ["오탐률(FPR)", "0.10"], ["리드타임", "1일"]].map(([k, v]) => (

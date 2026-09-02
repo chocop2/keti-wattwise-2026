@@ -14,21 +14,21 @@ function Photo({ label, h = "h-44" }: { label: string; h?: string }) {
 const CASES = [
   {
     icon: "💶",
-    title: "전기를 되파는 유럽·영국",
-    body: "도매가에 연동해 30분마다 요금이 바뀌고, 태양광 잉여 전력을 피크 시간에 되팔아 수익을 낸다. 전력이 남는 날은 요금이 마이너스가 되기도 한다.",
+    title: "유럽·영국은 벌써 되판다",
+    body: "요금이 30분마다 바뀌고, 남는 태양광 전기는 비쌀 때 되팔아요. 전기가 남아도는 날엔 요금이 마이너스가 돼서 오히려 돈을 받고 쓰기도 하고요.",
     tag: "실시간 요금 · 양방향 거래",
   },
   {
     icon: "☀️",
-    title: "태양광이 곧 자산",
-    body: "가정 태양광이 늘며, 남는 전기를 언제 팔지가 곧 돈이 된다. 설치 손익분기·판매 타이밍을 계산해주는 도구의 가치가 커진다.",
+    title: "태양광이 있으면 돈이 된다",
+    body: "집에 태양광이 늘면서, 남는 전기를 언제 파느냐가 곧 수익이 돼요. 설치하면 몇 년에 본전 뽑는지, 언제 파는 게 이득인지 계산해줄 도구가 필요하죠.",
     tag: "발전 · 자가소비 · 판매",
   },
   {
     icon: "📡",
-    title: "AMI가 깔린 한국",
-    body: "스마트미터가 전국 2,005만 호에 보급 완료(2024). 데이터는 이미 흐르지만, 가구가 이를 활용해 사고팔 도구는 아직 없다.",
-    tag: "인프라는 완성, 도구는 공백",
+    title: "한국은 계량기가 다 깔렸다",
+    body: "스마트미터가 전국 2,005만 호에 다 보급됐어요(2024). 데이터는 이미 흐르는데, 정작 집에서 이걸로 사고팔 수 있게 도와주는 건 아직 없어요.",
+    tag: "인프라는 됐고, 도구가 없음",
   },
 ];
 
@@ -44,14 +44,13 @@ export default function Home() {
             </div>
             <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight md:text-[2.6rem]">
               전기를 <span className="text-amber">사고팔고</span>, 아끼고,{" "}
-              <span className="text-teal">지키는</span>
+              <span className="text-teal">지켜주는</span>
               <br />
-              가정용 온디바이스 전력 비서
+              집 안의 전력 비서
             </h1>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-600">
-              라즈베리파이 한 대로, 외부 서버 없이 집 안에서{" "}
-              <b>비쌀 때 팔고 쌀 때 사는 전력 거래</b>와 <b>태양광 수익 최적화</b>,
-              그리고 <b>오토인코더 기반 응급상황 감지</b>까지 완결되는 비서.
+              라즈베리파이 한 대를 집에 두면, 전기가 쌀 때 쓰고 남는 태양광은 비쌀 때 파는 걸 알아서 챙겨줘요.
+              혼자 사는 집이라면 이상 신호까지 같이 봐주고요. 데이터는 집 밖으로 나가지 않습니다.
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
               <Link href="/why" className="btn-amber">왜 필요한가</Link>
@@ -65,9 +64,9 @@ export default function Home() {
 
       {/* 전력은 이제 사고파는 것 */}
       <section>
-        <h2 className="section-title">전력은 이제 &lsquo;쓰는 것&rsquo;이 아니라 &lsquo;사고파는 것&rsquo;</h2>
+        <h2 className="section-title">요즘 전기는 그냥 쓰기만 하는 게 아니다</h2>
         <p className="mt-1 text-sm text-slate-500">
-          해외는 이미 가정이 전기를 거래한다. 한국도 재생에너지·요금 개편으로 같은 방향으로 간다.
+          해외에선 집집마다 전기를 사고팔아요. 한국도 재생에너지가 늘고 요금제가 바뀌면서 그쪽으로 가는 중이고요.
         </p>
         <div className="mt-5 grid gap-4 md:grid-cols-3">
           {CASES.map((c) => (
@@ -89,27 +88,27 @@ export default function Home() {
 
       {/* 3대 가치 */}
       <section>
-        <h2 className="section-title">그래서 우리가 하는 것 — 세 가지</h2>
+        <h2 className="section-title">우리가 하는 건 크게 세 가지예요</h2>
         <div className="mt-5 grid gap-4 md:grid-cols-3">
           <div className="card border-t-4 border-amber p-6">
             <div className="text-2xl">🔁</div>
-            <div className="mt-2 font-bold text-amber">거래 — 비쌀 때 팔고, 쌀 때 산다</div>
+            <div className="mt-2 font-bold text-amber">거래 · 쌀 때 사고 비쌀 때 판다</div>
             <p className="mt-1 text-sm text-slate-500">
-              실시간 요금·태양광 발전을 예측해 <b>충전/판매 타이밍</b>을 자동으로 잡는다.
+              요금과 태양광 발전을 미리 예측해서, 언제 충전하고 언제 팔지를 알아서 잡아줘요.
             </p>
           </div>
           <div className="card border-t-4 border-teal p-6">
             <div className="text-2xl">💡</div>
-            <div className="mt-2 font-bold text-teal">절감 — 누진을 넘기 전에 막는다</div>
+            <div className="mt-2 font-bold text-teal">절감 · 누진 넘기기 전에 알려준다</div>
             <p className="mt-1 text-sm text-slate-500">
-              월말 사용량을 확률로 예측해 <b>누진 구간 초과를 사전 경고</b>·조정한다.
+              이번 달 얼마나 쓸지 미리 보고, 누진 구간을 넘길 것 같으면 그 전에 알려줘요.
             </p>
           </div>
           <div className="card border-t-4 border-danger p-6">
             <div className="text-2xl">🛡️</div>
-            <div className="mt-2 font-bold text-danger">안전 — 이상은 오토인코더로</div>
+            <div className="mt-2 font-bold text-danger">안전 · 이상 신호를 잡아준다</div>
             <p className="mt-1 text-sm text-slate-500">
-              평소 패턴을 학습해 <b>응급상황을 분류</b>, 예외(출장·여행)는 사후 알림으로.
+              평소 패턴을 배워두고 이상하면 알림을 줘요. 출장·여행처럼 정상인 경우는 나중에 확인받고요.
             </p>
           </div>
         </div>
@@ -119,12 +118,11 @@ export default function Home() {
       <section className="card bg-ink p-8 text-white">
         <div className="text-sm font-semibold text-amber">앞으로</div>
         <p className="mt-2 max-w-3xl text-lg font-bold leading-snug">
-          전력을 사고파는 시장은 더 활발해진다. 그 시대에{" "}
-          <span className="text-amber">가구가 스스로 거래하고 스스로 지키는</span> 도구가 표준이 된다.
+          전기를 사고파는 일은 점점 흔해질 거예요. 그때 집에서 알아서 사고팔고 챙겨주는 도구가 있으면 편하겠죠.
         </p>
         <div className="mt-4">
           <Link href="/why" className="inline-block rounded-lg bg-amber px-4 py-2 text-sm font-bold text-ink">
-            필요성 자세히 보기 →
+            왜 필요한지 보기 →
           </Link>
         </div>
       </section>
