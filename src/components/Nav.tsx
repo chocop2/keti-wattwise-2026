@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { logout } from "@/app/login/actions";
 
 const LINKS = [
+  { href: "/chat", label: "챗봇" },
   { href: "/", label: "소개" },
   { href: "/why", label: "필요성" },
   { href: "/anomaly", label: "이상탐지" },
@@ -13,18 +14,18 @@ const LINKS = [
   { href: "/solar", label: "태양광·거래" },
 ];
 
-// 대시보드/실증 — 포털 안에서 여는 내부 페이지
-const DASH_LINKS = [
+// 개발 과정 — 드롭다운으로 묶는 하위 페이지
+const DEV_LINKS = [
   { href: "/data", label: "데이터" },
   { href: "/forecast", label: "예측" },
   { href: "/deploy", label: "자취방 실증" },
-  { href: "/chat", label: "챗봇" },
 ];
 
 export default function Nav({ user }: { user: { name: string; role: string } }) {
   const path = usePathname();
   const active = (href: string) =>
     href === "/" ? path === "/" : path.startsWith(href);
+  const devActive = DEV_LINKS.some((l) => path.startsWith(l.href));
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/85 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-6xl items-center gap-1 px-4">
@@ -44,16 +45,29 @@ export default function Nav({ user }: { user: { name: string; role: string } }) 
               {l.label}
             </Link>
           ))}
-          <span className="mx-1 h-4 w-px bg-slate-200" aria-hidden />
-          {DASH_LINKS.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className={`navlink text-teal-700 ${active(l.href) ? "navlink-active" : ""}`}
-            >
-              {l.label}
-            </Link>
-          ))}
+          {/* 개발 과정 드롭다운 */}
+          <div className="group relative">
+            <button className={`navlink ${devActive ? "navlink-active" : ""}`}>
+              개발 과정 ▾
+            </button>
+            <div className="absolute left-0 top-full z-50 hidden min-w-[150px] pt-1 group-hover:block">
+              <div className="rounded-xl border border-slate-200 bg-white p-1 shadow-lg">
+                {DEV_LINKS.map((l) => (
+                  <Link
+                    key={l.href}
+                    href={l.href}
+                    className={`block rounded-lg px-3 py-2 text-sm ${
+                      active(l.href)
+                        ? "bg-slate-100 font-semibold text-ink"
+                        : "text-slate-600 hover:bg-slate-50"
+                    }`}
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
         </nav>
         <div className="flex items-center gap-2">
           <span className="hidden text-xs text-slate-500 sm:inline">
