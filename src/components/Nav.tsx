@@ -18,6 +18,7 @@ const DASH_LINKS = [
   { href: "/data", label: "데이터" },
   { href: "/forecast", label: "예측" },
   { href: "/deploy", label: "자취방 실증" },
+  { href: "/chat", label: "챗봇" },
 ];
 
 export default function Nav({ user }: { user: { name: string; role: string } }) {
