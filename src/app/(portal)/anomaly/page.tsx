@@ -36,8 +36,8 @@ export default function AnomalyPage() {
             이상탐지 · <span className="text-teal">오토인코더</span>로 위험 신호 잡기
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-600">
-            정답이 붙어있지 않은 문제라, <b>평소 전력 패턴만 배워서</b> 거기서 벗어나면 잡는 방식이에요.
-            정상·응급·예외로 나누고, 출장·여행 같은 예외는 나중에 확인받아서 헛알림을 줄입니다.
+            정답이 붙어 있지 않은 문제이므로, <b>평소 전력 패턴만 학습해</b> 거기서 벗어나면 잡아내는 방식입니다.
+            정상·응급·예외로 나누고, 출장·여행 같은 예외는 사후에 확인해 헛알림을 줄입니다.
           </p>
         </div>
       </section>
@@ -52,8 +52,8 @@ export default function AnomalyPage() {
               <span className="font-bold">AI Hub NILM · 110가구</span>
             </div>
             <p className="mt-2 text-sm text-slate-500">
-              가전기기 전력 사용량 데이터로 &lsquo;정상 생활 패턴&rsquo;을 폭넓게 학습.
-              train / holdout으로 나눠 <b>처음 보는 가구</b>에서도 재현되는지 검증.
+              가전기기 전력 사용량 데이터로 &lsquo;정상 생활 패턴&rsquo;을 폭넓게 학습합니다.
+              train / holdout으로 나누어 <b>처음 보는 가구</b>에서도 재현되는지 검증합니다.
             </p>
           </div>
           <div className="card p-6">
@@ -62,8 +62,8 @@ export default function AnomalyPage() {
               <span className="font-bold">자취방 직접 계측</span>
             </div>
             <p className="mt-2 text-sm text-slate-500">
-              라즈베리파이 + CT센서로 <b>실제 1인가구</b> 전력을 직접 수집(자세히는 &lsquo;자취방 실증&rsquo; 페이지).
-              한국 1인가구 고해상도 실측은 <b>우리만의 데이터 자산</b>.
+              라즈베리파이와 CT센서로 <b>실제 1인가구</b> 전력을 직접 수집합니다(자세한 내용은 &lsquo;자취방 실증&rsquo; 페이지).
+              한국 1인가구를 이만큼 촘촘히 잰 데이터는 흔치 않습니다.
             </p>
           </div>
         </div>
@@ -72,7 +72,7 @@ export default function AnomalyPage() {
       {/* 오토인코더 파이프라인 */}
       <section>
         <h2 className="section-title">2. 오토인코더는 이렇게 작동한다</h2>
-        <p className="mt-1 text-sm text-slate-500">평소를 &lsquo;압축했다 복원&rsquo;하도록 배운다. 이상이 오면 복원이 어긋난다.</p>
+        <p className="mt-1 text-sm text-slate-500">평소 패턴을 &lsquo;압축했다 복원&rsquo;하도록 학습합니다. 이상이 오면 복원이 어긋납니다.</p>
         <div className="mt-5 flex flex-wrap items-stretch gap-2">
           {STEPS.map((s, i) => (
             <div key={i} className="flex items-center gap-2">
@@ -86,10 +86,10 @@ export default function AnomalyPage() {
         </div>
         <div className="mt-4 grid gap-4 md:grid-cols-[1fr_1.1fr]">
           <div className="card p-6">
-            <div className="font-bold">왜 되살리기 오차가 이상 신호일까</div>
+            <div className="font-bold">왜 복원 오차가 이상 신호인가</div>
             <p className="mt-1 text-sm text-slate-500">
-              모델은 평소 모습만 잘 되살리도록 배웠어요. 그러다 TV·조명이 종일 켜져 있거나 요리·활동이 뚝 끊기면,
-              평소랑 달라서 <b>되살리기가 확 어긋나요</b>. 그 어긋난 정도가 곧 이상 신호가 됩니다.
+              모델은 평소 모습만 잘 복원하도록 학습했습니다. 그러다 TV·조명이 종일 켜져 있거나 요리·활동이 갑자기 끊기면,
+              평소와 달라 <b>복원이 크게 어긋납니다</b>. 그 어긋난 정도가 곧 이상 신호가 됩니다.
             </p>
           </div>
           <div className="card self-center p-3">
@@ -113,9 +113,9 @@ export default function AnomalyPage() {
         <div className="mt-4 card bg-ink p-6 text-white">
           <div className="text-sm font-semibold text-amber">오탐 설계</div>
           <p className="mt-1 text-sm leading-relaxed text-white/85">
-            출장·여행 같은 예외는 바로 경보하지 않고 나중에 확인받아요. 예를 들면
-            <i> &ldquo;3일째 사용량이 확 줄었는데 외출 중이세요?&rdquo;</i> 하고요. 잘못 울리면 그만큼 복지 인력이 헛걸음하니까,
-            <b> 헛알림 비율(오탐률)</b>도 탐지 정확도·속도랑 같이 챙겨봅니다.
+            출장·여행 같은 예외는 곧바로 경보하지 않고 사후에 확인합니다. 예를 들어
+            <i> &ldquo;3일째 사용량이 크게 줄었는데 외출 중이신가요?&rdquo;</i>라고 묻는 방식입니다. 잘못 울리면 그만큼 복지 인력이 헛걸음하므로,
+            <b> 헛알림 비율(오탐률)</b>도 탐지 정확도·속도와 함께 관리합니다.
           </p>
           <div className="mt-4 flex flex-wrap gap-2 text-xs">
             <span className="chip bg-white/15 text-white">지표 · 탐지 F1</span>
@@ -129,8 +129,8 @@ export default function AnomalyPage() {
       <section>
         <h2 className="section-title">4. 실험 결과 — 합성 자취방 데이터로 검증 (PoC)</h2>
         <p className="mt-1 text-sm text-slate-500">
-          실제 데이터를 아직 다 못 모아서, <b>1인가구 전력을 비슷하게 만들어(합성)</b> 오토인코더를 학습시키고
-          이상 상황 4가지를 넣어 성능을 봤어요. 실측 검증은 다음 단계고요.
+          실제 데이터를 아직 충분히 모으지 못해, <b>1인가구 전력을 비슷하게 만든 합성 데이터</b>로 오토인코더를 학습시키고
+          이상 상황 4가지를 넣어 성능을 측정했습니다. 실측 검증은 다음 단계입니다.
         </p>
         <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
           {[["F1 점수", "0.90"], ["재현율", "0.93"], ["오탐률(FPR)", "0.10"], ["리드타임", "1일"]].map(([k, v]) => (

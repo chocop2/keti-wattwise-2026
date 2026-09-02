@@ -13,7 +13,7 @@ const KIT = [
   { n: "Raspberry Pi 5", d: "온디바이스 예측·이상탐지 구동 (클라우드 없이 집 안에서)" },
   { n: "CT 센서 (SCT-013)", d: "분전반에 물려 집 전체 전류를 실측" },
   { n: "스마트플러그", d: "가전별 사용량 개별 측정 (TV·냉장고·전기포트 등)" },
-  { n: "로컬 DB", d: "1분 단위 시계열을 집 안 저장 — 데이터는 밖으로 안 나감" },
+  { n: "로컬 DB", d: "1분 단위 시계열을 집 안에 저장 — 데이터는 밖으로 나가지 않음" },
 ];
 
 const FLOW = [
@@ -30,14 +30,14 @@ export default function DeployPage() {
       <section className="card overflow-hidden">
         <div className="grid gap-6 p-8 md:grid-cols-[1.3fr_1fr] md:p-10">
           <div>
-            <div className="badge bg-amber-soft text-amber">실증 · 우리가 직접 만든다</div>
+            <div className="badge bg-amber-soft text-amber">실증 · 직접 측정한 데이터</div>
             <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight md:text-4xl">
               자취방에서 <span className="text-amber">직접</span> 전력 데이터를 모읍니다
             </h1>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-600">
-              공개 데이터만 쓰진 않았어요. 팀원이 <b>실제 자취방에 라즈베리파이랑 CT센서를 달아서</b> 전기를 직접 재고 있어요.
-              이 데이터로 예측·이상탐지·거래가 진짜 집에서 되는지 확인합니다.
-              한국 1인가구를 이렇게 촘촘히 잰 데이터는 흔치 않고요.
+              공개 데이터만 사용하지 않았습니다. 팀원이 <b>실제 자취방에 라즈베리파이와 CT센서를 설치해</b> 전기를 직접 측정하고 있습니다.
+              이 데이터로 예측·이상탐지·거래가 실제 가정에서 동작하는지 검증합니다.
+              한국 1인가구를 이만큼 촘촘히 잰 데이터는 흔치 않습니다.
             </p>
           </div>
           <Photo label="자취방 설치 전경 사진 자리" h="h-full" />
@@ -88,13 +88,13 @@ export default function DeployPage() {
 
       {/* 왜 실측인가 */}
       <section className="card bg-ink p-8 text-white">
-        <div className="text-sm font-semibold text-amber">왜 직접 재냐면</div>
+        <div className="text-sm font-semibold text-amber">왜 직접 측정하는가</div>
         <p className="mt-2 max-w-3xl text-lg font-bold leading-snug">
-          공개 데이터는 대개 예전 것이거나 뭉뚱그린 거예요. 우리는 <span className="text-amber">지금 우리 집</span>을 직접 재서,
-          예측이 실제로 잘 맞는지 확인합니다.
+          공개 데이터는 대개 오래됐거나 뭉뚱그려져 있습니다. 우리는 <span className="text-amber">지금 사는 집</span>을 직접 측정해,
+          예측이 실제로 잘 맞는지 검증합니다.
         </p>
         <p className="mt-3 text-xs text-white/70">
-          게다가 집 안에서 재고 처리하니까, 생활 패턴이 담긴 전력 데이터가 밖으로 안 나가요. 프라이버시도 챙기는 셈이죠.
+          또한 집 안에서 측정하고 처리하기 때문에, 생활 패턴이 담긴 전력 데이터가 밖으로 나가지 않습니다. 프라이버시도 함께 지키는 방식입니다.
         </p>
       </section>
     </div>
