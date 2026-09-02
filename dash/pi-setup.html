@@ -1,0 +1,195 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WattWise · 라즈베리파이 측정 구성도</title>
+<style>
+:root{color-scheme:light dark}
+*{margin:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;padding:20px;
+ background:var(--page);color:var(--ink)}
+body{--page:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;
+ --grid:#e1e0d9;--border:rgba(11,11,11,.1);
+ --blue:#2a78d6;--orange:#eb6834;--aqua:#1baf7a;--violet:#4a3aa7;--red:#d03b3b;--warnbg:#fdf3e7}
+@media (prefers-color-scheme:dark){body{--page:#0d0d0d;--surface:#1a1a19;--ink:#fff;--ink2:#c3c2b7;
+ --grid:#2c2c2a;--border:rgba(255,255,255,.1);
+ --blue:#3987e5;--orange:#d95926;--aqua:#199e70;--violet:#9085e9;--red:#e66767;--warnbg:#2a2118}}
+h1{font-size:20px;margin-bottom:4px}
+.sub{color:var(--ink2);font-size:13px;margin-bottom:18px}
+h2{font-size:15px;margin:4px 0 10px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+ padding:16px;margin-bottom:16px;overflow-x:auto}
+.badge{display:inline-block;font-size:11px;font-weight:650;padding:2px 8px;border-radius:99px;
+ color:#fff;vertical-align:2px;margin-left:6px}
+svg{display:block;min-width:820px}
+svg text{font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+.warn{background:var(--warnbg);border:1px solid var(--border);border-radius:10px;
+ padding:10px 14px;font-size:13px;margin-top:10px}
+table{border-collapse:collapse;font-size:12.5px;margin-top:8px}
+th,td{padding:5px 12px;text-align:left;border-bottom:1px solid var(--grid)}
+th{color:var(--ink2);font-weight:600}
+.note{font-size:12px;color:var(--muted);margin-top:8px}
+code{background:var(--page);border:1px solid var(--border);border-radius:5px;
+ padding:1px 6px;font-size:12px}
+</style></head><body>
+<h1>🔌 라즈베리파이 전력 측정 구성도</h1>
+<div class="sub">WattWise 실측 검증 하드웨어 — 경로 A(가전별 스마트플러그)와 경로 B(분전반 CT)를 병행하면 AI Hub 데이터와 같은 구조(총량 ch01 + 가전 채널)가 됩니다.</div>
+
+<div class="card">
+<h2>경로 A — Tapo P110 스마트플러그 <span class="badge" style="background:var(--aqua)">권장 · 배선 없음</span></h2>
+<svg viewBox="0 0 860 240" width="100%">
+<defs>
+ <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+  <path d="M0,0L10,5L0,10z" fill="currentColor"/></marker>
+</defs>
+<g font-size="12" fill="currentColor" color="var(--ink2)">
+ <!-- 가전 3개 -->
+ <g>
+  <rect x="20" y="20" width="120" height="52" rx="10" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+  <text x="80" y="42" text-anchor="middle" font-size="20">🧊</text><text x="80" y="62" text-anchor="middle">냉장고</text>
+  <rect x="20" y="94" width="120" height="52" rx="10" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+  <text x="80" y="116" text-anchor="middle" font-size="20">📺</text><text x="80" y="136" text-anchor="middle">TV</text>
+  <rect x="20" y="168" width="120" height="52" rx="10" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+  <text x="80" y="190" text-anchor="middle" font-size="20">☕</text><text x="80" y="210" text-anchor="middle">전기포트</text>
+ </g>
+ <!-- 플러그 3개 -->
+ <g>
+  <rect x="200" y="20" width="140" height="52" rx="10" fill="var(--aqua)" opacity=".14"/>
+  <rect x="200" y="20" width="140" height="52" rx="10" fill="none" stroke="var(--aqua)" stroke-width="2"/>
+  <text x="270" y="42" text-anchor="middle" font-weight="650" fill="var(--ink)">Tapo P110 ①</text>
+  <text x="270" y="60" text-anchor="middle" font-size="11">전력계측 내장</text>
+  <rect x="200" y="94" width="140" height="52" rx="10" fill="var(--aqua)" opacity=".14"/>
+  <rect x="200" y="94" width="140" height="52" rx="10" fill="none" stroke="var(--aqua)" stroke-width="2"/>
+  <text x="270" y="116" text-anchor="middle" font-weight="650" fill="var(--ink)">Tapo P110 ②</text>
+  <text x="270" y="134" text-anchor="middle" font-size="11">전력계측 내장</text>
+  <rect x="200" y="168" width="140" height="52" rx="10" fill="var(--aqua)" opacity=".14"/>
+  <rect x="200" y="168" width="140" height="52" rx="10" fill="none" stroke="var(--aqua)" stroke-width="2"/>
+  <text x="270" y="190" text-anchor="middle" font-weight="650" fill="var(--ink)">Tapo P110 ③</text>
+  <text x="270" y="208" text-anchor="middle" font-size="11">전력계측 내장</text>
+ </g>
+ <line x1="140" y1="46" x2="196" y2="46" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+ <line x1="140" y1="120" x2="196" y2="120" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+ <line x1="140" y1="194" x2="196" y2="194" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+ <text x="168" y="36" text-anchor="middle" font-size="10">콘센트에</text>
+ <text x="168" y="14" text-anchor="middle" font-size="10">꽂기만</text>
+ <!-- 공유기 -->
+ <rect x="420" y="86" width="130" height="68" rx="10" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+ <text x="485" y="112" text-anchor="middle" font-size="20">📶</text>
+ <text x="485" y="134" text-anchor="middle">Wi-Fi 공유기</text>
+ <path d="M340,46 C390,46 390,100 416,108" fill="none" stroke="var(--aqua)" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#ar)" color="var(--aqua)"/>
+ <path d="M340,120 L416,120" fill="none" stroke="var(--aqua)" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#ar)" color="var(--aqua)"/>
+ <path d="M340,194 C390,194 390,140 416,132" fill="none" stroke="var(--aqua)" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#ar)" color="var(--aqua)"/>
+ <text x="378" y="88" text-anchor="middle" font-size="10" fill="var(--aqua)">Wi-Fi</text>
+ <!-- Pi -->
+ <rect x="640" y="76" width="190" height="88" rx="12" fill="var(--blue)" opacity=".12"/>
+ <rect x="640" y="76" width="190" height="88" rx="12" fill="none" stroke="var(--blue)" stroke-width="2.2"/>
+ <text x="735" y="104" text-anchor="middle" font-weight="700" font-size="14" fill="var(--ink)">Raspberry Pi 5</text>
+ <text x="735" y="124" text-anchor="middle" font-size="11">파이썬 tapo 라이브러리</text>
+ <text x="735" y="141" text-anchor="middle" font-size="11">1초 폴링 → 1분 집계 CSV</text>
+ <line x1="550" y1="120" x2="636" y2="120" stroke="var(--blue)" stroke-width="1.8" marker-end="url(#ar)" color="var(--blue)"/>
+ <text x="593" y="110" text-anchor="middle" font-size="10" fill="var(--blue)">로컬 API 폴링</text>
+</g></svg>
+<div class="note">플러그를 가전과 콘센트 사이에 끼우고 Tapo 앱으로 Wi-Fi 등록 → Pi가 같은 공유기에서 각 플러그의 순시 전력(W)을 로컬 API로 읽음. 전기 작업 전혀 없음. 설치 시간 플러그당 3분.</div>
+</div>
+
+<div class="card">
+<h2>경로 B — 분전반 CT 클램프 <span class="badge" style="background:var(--orange)">총량 측정 · 주의 필요</span></h2>
+<svg viewBox="0 0 860 250" width="100%">
+<g font-size="12" fill="currentColor" color="var(--ink2)">
+ <!-- 분전반 -->
+ <rect x="20" y="40" width="150" height="150" rx="10" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+ <text x="95" y="66" text-anchor="middle" font-weight="650" fill="var(--ink)">분전반</text>
+ <text x="95" y="84" text-anchor="middle" font-size="11">(두꺼비집)</text>
+ <line x1="60" y1="100" x2="60" y2="180" stroke="var(--red)" stroke-width="3"/>
+ <text x="60" y="196" text-anchor="middle" font-size="10" fill="var(--red)">L(활선)</text>
+ <line x1="130" y1="100" x2="130" y2="180" stroke="var(--blue)" stroke-width="3"/>
+ <text x="130" y="196" text-anchor="middle" font-size="10" fill="var(--blue)">N(중성선)</text>
+ <!-- CT 클램프: L선에만 -->
+ <circle cx="60" cy="140" r="17" fill="none" stroke="var(--orange)" stroke-width="4"/>
+ <text x="60" y="120" text-anchor="middle" font-size="10" fill="var(--orange)" font-weight="650">CT 클램프</text>
+ <text x="235" y="30" text-anchor="middle" font-size="11" fill="var(--red)" font-weight="650">⚠ 활선 한 가닥에만! (L·N 같이 물면 0 나옴)</text>
+ <!-- SCT-013 -->
+ <rect x="230" y="112" width="130" height="56" rx="10" fill="var(--orange)" opacity=".13"/>
+ <rect x="230" y="112" width="130" height="56" rx="10" fill="none" stroke="var(--orange)" stroke-width="2"/>
+ <text x="295" y="136" text-anchor="middle" font-weight="650" fill="var(--ink)">SCT-013</text>
+ <text x="295" y="154" text-anchor="middle" font-size="11">전류 → 미소신호</text>
+ <line x1="77" y1="140" x2="226" y2="140" stroke="var(--orange)" stroke-width="1.8" marker-end="url(#ar2)" color="var(--orange)"/>
+ <!-- ADC -->
+ <rect x="420" y="104" width="150" height="72" rx="10" fill="var(--violet)" opacity=".12"/>
+ <rect x="420" y="104" width="150" height="72" rx="10" fill="none" stroke="var(--violet)" stroke-width="2"/>
+ <text x="495" y="128" text-anchor="middle" font-weight="650" fill="var(--ink)">ADS1115 ADC</text>
+ <text x="495" y="146" text-anchor="middle" font-size="11">아날로그→디지털</text>
+ <text x="495" y="163" text-anchor="middle" font-size="11">(+버든저항·바이어스)</text>
+ <line x1="360" y1="140" x2="416" y2="140" stroke="var(--violet)" stroke-width="1.8" marker-end="url(#ar2)" color="var(--violet)"/>
+ <text x="388" y="130" text-anchor="middle" font-size="10">아날로그</text>
+ <!-- Pi -->
+ <rect x="650" y="94" width="185" height="92" rx="12" fill="var(--blue)" opacity=".12"/>
+ <rect x="650" y="94" width="185" height="92" rx="12" fill="none" stroke="var(--blue)" stroke-width="2.2"/>
+ <text x="742" y="122" text-anchor="middle" font-weight="700" font-size="14" fill="var(--ink)">Raspberry Pi 5</text>
+ <text x="742" y="142" text-anchor="middle" font-size="11">초당 수백 샘플 → RMS</text>
+ <text x="742" y="159" text-anchor="middle" font-size="11">P ≈ 220V × I × 역률</text>
+ <line x1="570" y1="140" x2="646" y2="140" stroke="var(--blue)" stroke-width="1.8" marker-end="url(#ar2)" color="var(--blue)"/>
+ <text x="608" y="130" text-anchor="middle" font-size="10" fill="var(--blue)">I²C (4선)</text>
+ <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+  <path d="M0,0L10,5L0,10z" fill="currentColor"/></marker></defs>
+</g></svg>
+<table>
+<tr><th>ADS1115 핀</th><th>Pi 5 핀</th><th>용도</th></tr>
+<tr><td>VDD</td><td>1번 (3.3V)</td><td>전원</td></tr>
+<tr><td>GND</td><td>6번 (GND)</td><td>접지</td></tr>
+<tr><td>SDA</td><td>3번 (GPIO2)</td><td>I²C 데이터</td></tr>
+<tr><td>SCL</td><td>5번 (GPIO3)</td><td>I²C 클럭</td></tr>
+</table>
+<div class="warn">⚠️ <b>안전</b>: 분전반 커버 개방 작업은 감전 위험이 있습니다. 반드시 <b>메인 차단기를 내리고</b> CT를 클램프한 뒤 복구하세요. 가능하면 전기 유경험자와 함께. CT는 도선을 자르지 않고 <b>물기만</b> 하는 방식이라 클램프 자체는 비접촉입니다.</div>
+</div>
+
+<div class="card">
+<h2>소프트웨어 파이프라인 — 측정에서 예측까지</h2>
+<svg viewBox="0 0 860 150" width="100%">
+<g font-size="12" fill="currentColor" color="var(--ink2)">
+ <defs><marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+  <path d="M0,0L10,5L0,10z" fill="currentColor"/></marker></defs>
+ <g>
+ <rect x="15" y="40" width="150" height="66" rx="10" fill="var(--aqua)" opacity=".13"/>
+ <rect x="15" y="40" width="150" height="66" rx="10" fill="none" stroke="var(--aqua)" stroke-width="2"/>
+ <text x="90" y="64" text-anchor="middle" font-weight="650" fill="var(--ink)">수집 데몬</text>
+ <text x="90" y="82" text-anchor="middle" font-size="11">1초 폴링 (systemd)</text>
+ <text x="90" y="97" text-anchor="middle" font-size="11">Tapo + CT</text></g>
+ <line x1="165" y1="73" x2="205" y2="73" stroke="currentColor" stroke-width="1.6" marker-end="url(#ar3)"/>
+ <g>
+ <rect x="210" y="40" width="150" height="66" rx="10" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+ <text x="285" y="64" text-anchor="middle" font-weight="650" fill="var(--ink)">1분 집계 CSV</text>
+ <text x="285" y="82" text-anchor="middle" font-size="11">AI Hub와 동일 형식</text>
+ <text x="285" y="97" text-anchor="middle" font-size="11">(검증 데이터로 재사용)</text></g>
+ <line x1="360" y1="73" x2="400" y2="73" stroke="currentColor" stroke-width="1.6" marker-end="url(#ar3)"/>
+ <g>
+ <rect x="405" y="40" width="150" height="66" rx="10" fill="var(--blue)" opacity=".13"/>
+ <rect x="405" y="40" width="150" height="66" rx="10" fill="none" stroke="var(--blue)" stroke-width="2"/>
+ <text x="480" y="64" text-anchor="middle" font-weight="650" fill="var(--ink)">WattCast 추론</text>
+ <text x="480" y="82" text-anchor="middle" font-size="11">직전 168h → 24h 예측</text>
+ <text x="480" y="97" text-anchor="middle" font-size="11">0.4M 파라미터 · 1초 미만</text></g>
+ <line x1="555" y1="73" x2="595" y2="73" stroke="currentColor" stroke-width="1.6" marker-end="url(#ar3)"/>
+ <g>
+ <rect x="600" y="14" width="245" height="54" rx="10" fill="none" stroke="var(--violet)" stroke-width="2"/>
+ <text x="722" y="36" text-anchor="middle" font-weight="650" fill="var(--ink)">📊 대시보드 갱신</text>
+ <text x="722" y="54" text-anchor="middle" font-size="11">분위수 밴드 + 누진 진입 확률</text>
+ <rect x="600" y="82" width="245" height="54" rx="10" fill="none" stroke="var(--orange)" stroke-width="2"/>
+ <text x="722" y="104" text-anchor="middle" font-weight="650" fill="var(--ink)">🔔 이상 감지 알림</text>
+ <text x="722" y="122" text-anchor="middle" font-size="11">PIT+CUSUM — 활동정지·방치 감지</text></g>
+ <line x1="595" y1="73" x2="600" y2="41" stroke="currentColor" stroke-width="1.6" marker-end="url(#ar3)"/>
+ <line x1="595" y1="73" x2="600" y2="109" stroke="currentColor" stroke-width="1.6" marker-end="url(#ar3)"/>
+</g></svg>
+<div class="note">설치 명령: <code>sudo apt install python3-pip</code> → <code>pip3 install tapo torch pandas</code> (경로 B는 <code>adafruit-circuitpython-ads1x15</code> 추가, raspi-config에서 I²C 활성화). 모델 파일은 <code>wattcast_v2.py</code> + 체크포인트 3개(&lt;5MB)만 복사하면 됩니다.</div>
+</div>
+
+<div class="card">
+<h2>구매 체크리스트 (표준 구성 기준 — 실제 목록 확인 후 확정)</h2>
+<table>
+<tr><th>품목</th><th>수량</th><th>용도</th><th>대략 가격</th></tr>
+<tr><td>Raspberry Pi 5 (4GB+) + 전원 + SD카드</td><td>1</td><td>수집·추론 서버</td><td>~12만원</td></tr>
+<tr><td>Tapo P110 (전력계측 지원 모델)</td><td>3~4</td><td>가전별 측정 (경로 A)</td><td>개당 ~1.5만원</td></tr>
+<tr><td>SCT-013-030 CT 클램프</td><td>1</td><td>분전반 총량 (경로 B)</td><td>~1만원</td></tr>
+<tr><td>ADS1115 ADC 모듈 + 점퍼선</td><td>1</td><td>CT 아날로그 변환</td><td>~5천원</td></tr>
+</table>
+<div class="note">P110 대신 계측 미지원 모델(P100)이면 전력값이 안 나오니 주의. 경로 A만으로도 데모는 충분합니다.</div>
+</div>
+<a id="wwBackBtn" href="javascript:history.back()" style="position:fixed;left:16px;bottom:16px;z-index:99999;background:#0E2841;color:#fff;font:600 13px/1 system-ui,-apple-system,sans-serif;padding:10px 15px;border-radius:9px;text-decoration:none;box-shadow:0 3px 10px rgba(0,0,0,.28)">&#8592; 뒤로</a>
+</body></html>
