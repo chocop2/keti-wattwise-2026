@@ -56,7 +56,7 @@ export default function AnalyticsPage() {
     <div className="space-y-8">
       <div>
         <h1 className="section-title">🔋 전력 분석 대시보드</h1>
-        <p className="section-sub">
+        <p className="mt-1 text-sm text-slate-500">
           예측 · 누진 경고 · 가전별 분해 · 태양광 손익분기 · 탐색적 데이터 분석(EDA). 모든 수치는 시뮬레이션/예시 단가입니다.
         </p>
       </div>
@@ -189,7 +189,7 @@ export default function AnalyticsPage() {
       <section className="space-y-4">
         <div>
           <h2 className="section-title">📊 탐색적 데이터 분석 (EDA)</h2>
-          <p className="section-sub">사용 패턴을 여러 각도로 시각화합니다. 시간대·요일·월별·요일×시간 히트맵.</p>
+          <p className="mt-1 text-sm text-slate-500">사용 패턴을 여러 각도로 시각화합니다. 시간대·요일·월별·요일×시간 히트맵.</p>
         </div>
         <div className="grid gap-4 lg:grid-cols-2">
           <div className="card p-5">

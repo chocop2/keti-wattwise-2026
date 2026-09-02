@@ -1,8 +1,11 @@
 import Link from "next/link";
+import Shot from "@/components/Shot";
+
+const BP = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 function Photo({ label, h = "h-44" }: { label: string; h?: string }) {
   return (
-    <div className={`flex ${h} w-full items-center justify-center rounded-xl border border-dashed border-white/25 bg-white/5 text-center text-sm text-sage/60`}>
+    <div className={`flex ${h} w-full items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 text-center text-sm text-slate-400`}>
       <div>
         <div className="text-2xl">📷</div>
         <div className="mt-1">{label}</div>
@@ -59,20 +62,20 @@ const ROLES = [
 export default function Home() {
   return (
     <div className="space-y-12">
-      {/* 히어로 — 자연 패널 */}
-      <section className="hero-nature rounded-3xl border border-white/10 shadow-pop">
-        <div className="relative z-10 grid gap-6 p-8 md:grid-cols-[1.45fr_1fr] md:p-12">
-          <div className="self-center text-white">
-            <div className="badge bg-white/10 text-mint">
+      {/* 히어로 */}
+      <section className="card overflow-hidden">
+        <div className="grid gap-6 p-8 md:grid-cols-[1.45fr_1fr] md:p-10">
+          <div className="self-center">
+            <div className="badge bg-amber-soft text-amber">
               ① 사회문제 해결을 위한 AI · 융합·응용기술 아이디어
             </div>
-            <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight md:text-[2.7rem]">
+            <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight md:text-[2.6rem]">
               전기를 <span className="text-amber">사고팔고</span>, 아끼고,{" "}
-              <span className="text-mint">지켜주는</span>
+              <span className="text-teal">지켜주는</span>
               <br />
               집 안의 전력 비서
             </h1>
-            <p className="mt-5 max-w-xl text-sm leading-relaxed text-sage/85">
+            <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-600">
               라즈베리파이 한 대만 두면, 전기가 쌀 때 쓰고 남는 태양광은 비쌀 때 파는 것까지 알아서 관리합니다.
               혼자 사는 집이라면 이상 신호도 함께 살핍니다. 모든 데이터는 집 밖으로 나가지 않습니다.
             </p>
@@ -82,8 +85,8 @@ export default function Home() {
               <Link href="/anomaly" className="btn-ghost">이상탐지 방법</Link>
             </div>
           </div>
-          <div className="self-center rounded-2xl border border-white/15 bg-black/15 p-1.5 backdrop-blur-sm">
-            <Photo label="자연·태양광 대표 사진 자리" h="h-56 md:h-full" />
+          <div className="self-center">
+            <Shot src={`${BP}/deploy/room-setup.jpg`} caption="자취방 현장에서 라즈베리파이로 직접 전력 측정" h="h-64 md:h-full" />
           </div>
         </div>
       </section>
@@ -130,17 +133,15 @@ export default function Home() {
       </section>
 
       {/* 미래 트렌드 배너 */}
-      <section className="hero-nature rounded-2xl border border-white/10 p-8 shadow-pop">
-        <div className="relative z-10">
-          <div className="eyebrow">Looking Ahead</div>
-          <p className="max-w-3xl text-lg font-bold leading-snug text-white">
-            전기를 사고파는 일은 점점 일상이 됩니다. 그때 가정에서 알아서 거래하고 관리해 주는 도구가 있다면, 누구나 손쉽게 참여할 수 있습니다.
-          </p>
-          <div className="mt-4">
-            <Link href="/why" className="inline-block rounded-lg bg-amber px-4 py-2 text-sm font-bold text-white">
-              왜 필요한지 보기 →
-            </Link>
-          </div>
+      <section className="card bg-ink p-8 text-white">
+        <div className="eyebrow !text-amber">Looking Ahead</div>
+        <p className="max-w-3xl text-lg font-bold leading-snug">
+          전기를 사고파는 일은 점점 일상이 됩니다. 그때 가정에서 알아서 거래하고 관리해 주는 도구가 있다면, 누구나 손쉽게 참여할 수 있습니다.
+        </p>
+        <div className="mt-4">
+          <Link href="/why" className="inline-block rounded-lg bg-amber px-4 py-2 text-sm font-bold text-white">
+            왜 필요한지 보기 →
+          </Link>
         </div>
       </section>
     </div>

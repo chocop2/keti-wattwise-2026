@@ -1,6 +1,6 @@
 function Photo({ label, h = "h-44" }: { label: string; h?: string }) {
   return (
-    <div className={`flex ${h} w-full items-center justify-center rounded-xl border border-dashed border-white/25 bg-white/5 text-center text-sm text-sage/60`}>
+    <div className={`flex ${h} w-full items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 text-center text-sm text-slate-400`}>
       <div>
         <div className="text-2xl">📷</div>
         <div className="mt-1">{label}</div>
@@ -12,14 +12,14 @@ function Photo({ label, h = "h-44" }: { label: string; h?: string }) {
 export default function WhyPage() {
   return (
     <div className="space-y-12">
-      {/* 헤더 — 자연 패널 */}
-      <section className="hero-nature rounded-3xl border border-white/10 shadow-pop">
-        <div className="relative z-10 p-8 md:p-12">
-          <div className="badge bg-white/10 text-mint">왜 지금, 왜 이 방법인가</div>
-          <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight text-white md:text-4xl">
+      {/* 헤더 */}
+      <section className="card overflow-hidden">
+        <div className="p-8 md:p-10">
+          <div className="badge bg-amber-soft text-amber">왜 지금, 왜 이 방법인가</div>
+          <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight md:text-4xl">
             필요성
           </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-sage/85">
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-600">
             전기는 이제 쓰기만 하는 대상이 아니라, 사고팔고 아끼고 위험을 읽어 내는 대상이 되고 있습니다.
             이 서비스가 왜 필요한지를 정책 측면(전력시장이 향하는 방향)과 기술 측면(왜 오토인코더인가)으로 나누어 정리했습니다.
           </p>
@@ -60,16 +60,14 @@ export default function WhyPage() {
         </div>
 
         <div className="mt-4 grid gap-4 md:grid-cols-[1.2fr_1fr]">
-          <div className="hero-nature rounded-2xl border border-white/10 p-6">
-            <div className="relative z-10">
-              <p className="text-lg font-bold leading-snug text-white">
-                그래서 <span className="text-amber">쌀 때 사고 비쌀 때 파는 판단</span>을,
-                집집마다 라즈베리파이가 알아서 내리도록 하는 것이 목표입니다.
-              </p>
-              <p className="mt-3 text-xs text-sage/75">
-                태양광 판매, 누진 회피, 요금 절감을 한 번에. 취약계층의 요금 부담과 냉방 문제 해소로도 이어집니다.
-              </p>
-            </div>
+          <div className="card bg-ink p-6 text-white">
+            <p className="text-lg font-bold leading-snug">
+              그래서 <span className="text-amber">쌀 때 사고 비쌀 때 파는 판단</span>을,
+              집집마다 라즈베리파이가 알아서 내리도록 하는 것이 목표입니다.
+            </p>
+            <p className="mt-3 text-xs text-white/70">
+              태양광 판매, 누진 회피, 요금 절감을 한 번에. 취약계층의 요금 부담과 냉방 문제 해소로도 이어집니다.
+            </p>
           </div>
           <Photo label="유럽 전력 실시간 요금 / 태양광 사진 자리" h="h-full" />
         </div>

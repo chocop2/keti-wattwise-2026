@@ -1,20 +1,11 @@
-function Photo({ label, h = "h-44" }: { label: string; h?: string }) {
-  return (
-    <div className={`flex ${h} w-full items-center justify-center rounded-xl border border-dashed border-white/25 bg-white/5 text-center text-sm text-sage/60`}>
-      <div>
-        <div className="text-2xl">🖼️</div>
-        <div className="mt-1">{label}</div>
-      </div>
-    </div>
-  );
-}
+import Shot from "@/components/Shot";
 
 const BP = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 const STEPS = [
   { t: "전력 시계열 입력", d: "1분 단위 사용량·가전 신호", c: "bg-slate-100 text-slate-700" },
   { t: "인코더", d: "핵심 패턴만 압축", c: "bg-teal-soft text-teal" },
-  { t: "잠재 표현", d: "그 가구의 &lsquo;평소&rsquo;", c: "bg-forest-700 text-mint" },
+  { t: "잠재 표현", d: "그 가구의 &lsquo;평소&rsquo;", c: "bg-ink text-white" },
   { t: "디코더", d: "패턴 복원", c: "bg-teal-soft text-teal" },
   { t: "복원 오차", d: "= 이상 점수", c: "bg-amber-soft text-amber" },
 ];
@@ -28,14 +19,14 @@ const CLASSES = [
 export default function AnomalyPage() {
   return (
     <div className="space-y-12">
-      {/* 헤더 — 자연 패널 */}
-      <section className="hero-nature rounded-3xl border border-white/10 shadow-pop">
-        <div className="relative z-10 p-8 md:p-12">
-          <div className="badge bg-white/10 text-mint">방법론</div>
-          <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight text-white md:text-4xl">
-            오토인코더로 <span className="text-mint">위험 신호</span>를 잡습니다
+      {/* 헤더 */}
+      <section className="card overflow-hidden">
+        <div className="p-8 md:p-10">
+          <div className="badge bg-teal-soft text-teal">방법론</div>
+          <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight md:text-4xl">
+            오토인코더로 <span className="text-teal">위험 신호</span>를 잡습니다
           </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-sage/85">
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-600">
             정답이 붙어 있지 않은 문제이므로, 평소 전력 패턴만 학습해 거기서 벗어나면 잡아내는 방식입니다.
             정상·응급·예외로 나누고, 출장·여행 같은 예외는 사후에 확인해 헛알림을 줄입니다.
           </p>
@@ -66,6 +57,9 @@ export default function AnomalyPage() {
               라즈베리파이와 CT센서로 <b>실제 1인가구</b> 전력을 직접 수집합니다(자세한 내용은 &lsquo;자취방 실증&rsquo; 페이지).
               한국 1인가구를 이만큼 촘촘히 잰 데이터는 흔치 않습니다.
             </p>
+            <div className="mt-3">
+              <Shot src={`${BP}/deploy/panel-ct.jpg`} caption="분전반에 CT센서(파란 클램프)를 물려 전류 실측" h="h-40" />
+            </div>
           </div>
         </div>
       </section>
@@ -82,7 +76,7 @@ export default function AnomalyPage() {
                 <div className="text-sm font-bold" dangerouslySetInnerHTML={{ __html: s.t }} />
                 <div className="mt-0.5 text-[11px] opacity-80" dangerouslySetInnerHTML={{ __html: s.d }} />
               </div>
-              {i < STEPS.length - 1 && <span className="text-sage/40">→</span>}
+              {i < STEPS.length - 1 && <span className="text-slate-300">→</span>}
             </div>
           ))}
         </div>
@@ -114,19 +108,17 @@ export default function AnomalyPage() {
             </div>
           ))}
         </div>
-        <div className="mt-4 hero-nature rounded-2xl border border-white/10 p-6">
-          <div className="relative z-10">
-            <div className="text-sm font-semibold text-amber">오탐 설계</div>
-            <p className="mt-1 text-sm leading-relaxed text-sage/90">
-              출장·여행 같은 예외는 곧바로 경보하지 않고 사후에 확인합니다. 예를 들어
-              <i className="text-white"> &ldquo;3일째 사용량이 크게 줄었는데 외출 중이신가요?&rdquo;</i>라고 묻는 방식입니다. 잘못 울리면 그만큼 복지 인력이 헛걸음하므로,
-              <b className="text-white"> 헛알림 비율(오탐률)</b>도 탐지 정확도·속도와 함께 관리합니다.
-            </p>
-            <div className="mt-4 flex flex-wrap gap-2 text-xs">
-              <span className="chip bg-white/15 text-white">지표 · 탐지 F1</span>
-              <span className="chip bg-white/15 text-white">리드타임(얼마나 빨리)</span>
-              <span className="chip bg-white/15 text-white">오탐률(FPR)</span>
-            </div>
+        <div className="mt-4 card bg-ink p-6 text-white">
+          <div className="text-sm font-semibold text-amber">오탐 설계</div>
+          <p className="mt-1 text-sm leading-relaxed text-white/85">
+            출장·여행 같은 예외는 곧바로 경보하지 않고 사후에 확인합니다. 예를 들어
+            <i> &ldquo;3일째 사용량이 크게 줄었는데 외출 중이신가요?&rdquo;</i>라고 묻는 방식입니다. 잘못 울리면 그만큼 복지 인력이 헛걸음하므로,
+            <b> 헛알림 비율(오탐률)</b>도 탐지 정확도·속도와 함께 관리합니다.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2 text-xs">
+            <span className="chip bg-white/15 text-white">지표 · 탐지 F1</span>
+            <span className="chip bg-white/15 text-white">리드타임(얼마나 빨리)</span>
+            <span className="chip bg-white/15 text-white">오탐률(FPR)</span>
           </div>
         </div>
       </section>
