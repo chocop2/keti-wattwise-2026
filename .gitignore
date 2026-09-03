@@ -2,6 +2,10 @@
 
 # dependencies
 /node_modules
+/.venv-dashboard/
+dashboard/**/__pycache__/
+dashboard/models/**/*.safetensors
+dashboard/predictions/
 /.pnp
 .pnp.js
 .yarn/install-state.gz

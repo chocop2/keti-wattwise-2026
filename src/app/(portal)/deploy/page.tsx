@@ -1,4 +1,5 @@
 import Shot from "@/components/Shot";
+import ForecastLab from "./ForecastLab";
 
 const BP = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
@@ -44,6 +45,9 @@ export default function DeployPage() {
           </div>
         </div>
       </section>
+
+      {/* 실제 모델 예측 */}
+      <ForecastLab />
 
       {/* 구성 키트 */}
       <section>

@@ -1,0 +1,20 @@
+{
+  "appliance": "tv",
+  "channel_id": "ch02",
+  "dataset": "measurement",
+  "source_files": 57,
+  "series": 3,
+  "series_ids": [
+    "정빈_tv",
+    "진규_tv",
+    "채연_tv"
+  ],
+  "hourly_rows": 1368,
+  "valid_target_rows": 1368,
+  "low_coverage_rows": 0,
+  "minimum_hourly_coverage": 0.8,
+  "period_start": "2023-08-15 00:00:00",
+  "period_end": "2023-09-02 23:00:00",
+  "output": "/Users/jungbin/Desktop/project/keti/실측/preprocessing_data/tv/chronos2/chronos_hourly.parquet",
+  "model_input": "/Users/jungbin/Desktop/project/keti/실측/preprocessing_data/tv/chronos2/chronos_model_input.parquet"
+}
