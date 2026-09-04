@@ -4,7 +4,7 @@
 > 확률 예측 기반 온디바이스 전력 비서 (Raspberry Pi 5)
 
 ### 🔗 라이브 데모
-**https://chocop2.github.io/keti-wattwise-2026/**
+**https://park-chaeyeon.github.io/keti-wattwise-2026/**
 (설치·로그인 없이 링크만 열면 됩니다)
 
 ---
@@ -45,7 +45,7 @@
 ## 로컬에서 실행하기
 
 ```bash
-git clone https://github.com/chocop2/keti-wattwise-2026
+git clone https://github.com/Park-ChaeYeon/keti-wattwise-2026
 cd keti-wattwise-2026
 npm install
 npm run dev
