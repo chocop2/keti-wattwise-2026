@@ -6,19 +6,18 @@ import { logout } from "@/app/login/actions";
 
 const LINKS = [
   { href: "/chat", label: "챗봇" },
-  { href: "/", label: "소개" },
-  { href: "/why", label: "필요성" },
-  { href: "/anomaly", label: "이상탐지" },
-  { href: "/households", label: "스마트홈 진단" },
-  { href: "/analytics", label: "전력 분석" },
+  { href: "/why", label: "소개" },
+  { href: "/analytics", label: "전력 대시보드" },
   { href: "/solar", label: "태양광·거래" },
+  { href: "/households", label: "스마트홈 진단" },
+  { href: "/anomaly", label: "이상탐지" },
 ];
 
 // 개발 과정 — 드롭다운으로 묶는 하위 페이지
 const DEV_LINKS = [
   { href: "/data", label: "데이터" },
   { href: "/forecast", label: "예측" },
-  { href: "/deploy", label: "자취방 실증" },
+  { href: "/deploy", label: "실증" },
 ];
 
 export default function Nav({ user }: { user: { name: string; role: string } }) {

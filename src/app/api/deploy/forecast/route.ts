@@ -1,34 +1,15 @@
 import { execFile } from "node:child_process";
-import { access, readFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 import { NextResponse } from "next/server";
+import { pythonExecutable } from "@/lib/pythonRuntime";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const execFileAsync = promisify(execFile);
 const APPLIANCES = ["tv", "에어컨", "제습기", "세탁기"] as const;
-
-async function pythonExecutable(root: string) {
-  const candidates = [
-    process.env.WATTWISE_PYTHON,
-    path.join(root, ".venv-dashboard", "bin", "python"),
-    path.join(root, "keti", "bin", "python"),
-    "python3",
-  ].filter(Boolean) as string[];
-
-  for (const candidate of candidates) {
-    if (candidate === "python3") return candidate;
-    try {
-      await access(candidate);
-      return candidate;
-    } catch {
-      // 다음 후보를 확인한다.
-    }
-  }
-  return "python3";
-}
 
 export async function GET() {
   const root = process.cwd();

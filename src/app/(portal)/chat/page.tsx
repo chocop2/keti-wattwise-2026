@@ -5,30 +5,31 @@ import { answer, SUGGESTIONS, type Msg } from "@/lib/chatbot";
 
 export default function ChatPage() {
   const [msgs, setMsgs] = useState<Msg[]>([
-    { role: "bot", text: "안녕하세요! WattWise 도우미예요 ⚡ 전력 거래·오토인코더·필요성·데이터·실험 결과 등 무엇이든 물어보세요." },
+    { role: "bot", text: "안녕하세요. 무엇이든 물어보세요!" },
   ]);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [msgs]);
+  }, [msgs, loading]);
 
-  function send(text: string) {
+  async function send(text: string) {
     const q = text.trim();
     if (!q) return;
-    setMsgs((m) => [...m, { role: "user", text: q }]);
+    const next: Msg[] = [...msgs, { role: "user", text: q }];
+    setMsgs(next);
     setInput("");
-    setTimeout(() => setMsgs((m) => [...m, { role: "bot", text: answer(q) }]), 350);
+    setLoading(true);
+    const reply = await answer(next);
+    setLoading(false);
+    setMsgs((m) => [...m, { role: "bot", text: reply }]);
   }
 
   return (
     <div className="mx-auto max-w-3xl">
       <div className="mb-4">
-        <div className="badge bg-teal-soft text-teal">챗봇</div>
-        <h1 className="mt-3 text-2xl font-extrabold">WattWise 도우미</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          프로젝트에 대해 물어보세요. 지식기반(규칙형)이라 서버 없이 바로 답합니다. 실제 LLM 연동은 다음 단계입니다.
-        </p>
+        <h1 className="mt-3 text-2xl font-extrabold">⚡️WattWise 상담사 ⚡️</h1>
       </div>
 
       <div className="card flex h-[62vh] min-h-[440px] flex-col overflow-hidden p-0">
@@ -43,12 +44,21 @@ export default function ChatPage() {
               />
             </div>
           ))}
+          {loading && (
+            <div className="flex justify-start">
+              <div className="flex items-center gap-1.5 rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300 [animation-delay:-0.3s]" />
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300 [animation-delay:-0.15s]" />
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300" />
+              </div>
+            </div>
+          )}
           <div ref={endRef} />
         </div>
         <div className="border-t border-slate-100 bg-white p-3">
           <div className="mb-2 flex flex-wrap gap-1.5">
             {SUGGESTIONS.map((s) => (
-              <button key={s} onClick={() => send(s)} className="chip bg-slate-100 text-slate-600 hover:bg-slate-200">
+              <button key={s} onClick={() => send(s)} disabled={loading} className="chip bg-slate-100 text-slate-600 hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-50">
                 {s}
               </button>
             ))}
@@ -63,10 +73,11 @@ export default function ChatPage() {
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              disabled={loading}
               placeholder="궁금한 걸 물어보세요…"
-              className="input flex-1"
+              className="input flex-1 disabled:opacity-50"
             />
-            <button className="btn-primary shrink-0">보내기</button>
+            <button disabled={loading} className="btn-primary shrink-0 disabled:cursor-not-allowed disabled:opacity-50">보내기</button>
           </form>
         </div>
       </div>

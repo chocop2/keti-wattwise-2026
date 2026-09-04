@@ -1,7 +1,58 @@
-import Link from "next/link";
-import Shot from "@/components/Shot";
+function HeroBg() {
+  return (
+    <div className="pointer-events-none absolute inset-0" aria-hidden>
+      <div
+        className="absolute inset-0"
+        style={{ background: "linear-gradient(150deg, #FBF3DE 0%, #F7FAFB 45%, #E1F5F7 100%)" }}
+      />
+      <div className="absolute -left-10 -top-14 h-56 w-56 rounded-full bg-amber opacity-20 blur-3xl" />
+      <div className="absolute -bottom-16 -right-10 h-64 w-64 rounded-full bg-teal opacity-20 blur-3xl" />
+    </div>
+  );
+}
 
-const BP = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+function HeroArt({ h = "h-72 md:h-80 lg:h-96" }: { h?: string }) {
+  return (
+    <div className={`relative ${h} w-full`}>
+      <svg viewBox="0 0 400 300" className="absolute inset-0 h-full w-full">
+      <g transform="translate(200,150) scale(1.35) translate(-200,-150)">
+        <path
+          d="M70 230 Q140 150 200 190 T330 130"
+          fill="none"
+          stroke="#0A9AA8"
+          strokeWidth="2"
+          strokeDasharray="2 8"
+          strokeLinecap="round"
+          opacity="0.6"
+        />
+        <circle cx="330" cy="130" r="4" fill="#0A9AA8" />
+        <circle cx="200" cy="190" r="3" fill="#0A9AA8" opacity="0.7" />
+        <g transform="translate(120,120)">
+          <rect x="-6" y="52" width="92" height="6" rx="2" fill="#1F2328" opacity="0.15" />
+          <path d="M0 60 V20 L40 -10 L80 20 V60 Z" fill="#ffffff" stroke="#1F2328" strokeWidth="2.5" strokeLinejoin="round" />
+          <g transform="translate(10,-2) rotate(-18)">
+            <rect x="0" y="0" width="46" height="26" rx="2" fill="#0A9AA8" opacity="0.85" />
+            <line x1="0" y1="8.6" x2="46" y2="8.6" stroke="#E1F5F7" strokeWidth="1" />
+            <line x1="0" y1="17.2" x2="46" y2="17.2" stroke="#E1F5F7" strokeWidth="1" />
+            <line x1="15.3" y1="0" x2="15.3" y2="26" stroke="#E1F5F7" strokeWidth="1" />
+            <line x1="30.6" y1="0" x2="30.6" y2="26" stroke="#E1F5F7" strokeWidth="1" />
+          </g>
+          <path d="M44 26 L28 46 H40 L26 68 L54 42 H42 Z" fill="#E39A00" />
+        </g>
+        <g transform="translate(300,60)" opacity="0.9">
+          <circle cx="0" cy="0" r="16" fill="#FBF3DE" stroke="#E39A00" strokeWidth="2" />
+          {Array.from({ length: 8 }).map((_, i) => {
+            const a = (i * Math.PI) / 4;
+            const x1 = Math.cos(a) * 22, y1 = Math.sin(a) * 22;
+            const x2 = Math.cos(a) * 28, y2 = Math.sin(a) * 28;
+            return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#E39A00" strokeWidth="2" strokeLinecap="round" />;
+          })}
+        </g>
+      </g>
+      </svg>
+    </div>
+  );
+}
 
 function Photo({ label, h = "h-44" }: { label: string; h?: string }) {
   return (
@@ -14,24 +65,56 @@ function Photo({ label, h = "h-44" }: { label: string; h?: string }) {
   );
 }
 
+function CardWatermark({ variant }: { variant: "clock" | "sun" | "data" }) {
+  const cls = "pointer-events-none absolute -right-5 -bottom-5 h-32 w-32 opacity-[0.07]";
+  if (variant === "clock") {
+    return (
+      <svg viewBox="0 0 100 100" className={cls} aria-hidden>
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#0A9AA8" strokeWidth="6" />
+        <line x1="50" y1="50" x2="50" y2="24" stroke="#0A9AA8" strokeWidth="6" strokeLinecap="round" />
+        <line x1="50" y1="50" x2="70" y2="60" stroke="#0A9AA8" strokeWidth="6" strokeLinecap="round" />
+      </svg>
+    );
+  }
+  if (variant === "sun") {
+    return (
+      <svg viewBox="0 0 100 100" className={cls} aria-hidden>
+        <circle cx="50" cy="50" r="22" fill="none" stroke="#E39A00" strokeWidth="6" />
+        {Array.from({ length: 8 }).map((_, i) => {
+          const a = (i * Math.PI) / 4;
+          const x1 = 50 + Math.cos(a) * 32, y1 = 50 + Math.sin(a) * 32;
+          const x2 = 50 + Math.cos(a) * 44, y2 = 50 + Math.sin(a) * 44;
+          return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#E39A00" strokeWidth="6" strokeLinecap="round" />;
+        })}
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 100 100" className={cls} aria-hidden>
+      <circle cx="30" cy="70" r="6" fill="#0A9AA8" />
+      <circle cx="55" cy="45" r="6" fill="#0A9AA8" />
+      <circle cx="80" cy="60" r="6" fill="#0A9AA8" />
+      <circle cx="70" cy="25" r="6" fill="#0A9AA8" />
+      <path d="M30 70 L55 45 L80 60 L70 25" fill="none" stroke="#0A9AA8" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 const CASES = [
   {
-    icon: "💶",
-    title: "유럽·영국은 이미 되판다",
-    body: "요금이 30분 단위로 바뀌어 쌀 때 쓰고, 남는 태양광 전기는 비쌀 때 되팝니다. 공급이 넘치는 날에는 요금이 마이너스가 되어, 오히려 보상을 받고 전기를 쓰기도 합니다.",
-    tag: "실시간 요금 · 양방향 거래",
+    title: "전기는 이제 ‘언제 쓰느냐’가 중요",
+    body: ["유럽에서는 시간에 따라 전기요금이 달라지고,", "남는 태양광 전력을 판매하는 가정도 늘고 있음"],
+    watermark: "clock" as const,
   },
   {
-    icon: "☀️",
-    title: "태양광은 수익 자산이 된다",
-    body: "가정용 태양광이 확대되면서, 남는 전기를 언제 파느냐가 곧 수익으로 이어집니다. 투자 회수 시점과 최적 판매 시점을 계산해 주는 도구가 필요합니다.",
-    tag: "발전 · 자가소비 · 판매",
+    title: "태양광으로 수익 창출",
+    body: ["생산한 전력을 언제 사용하고, 얼마나 남기고,", "어떻게 활용하느냐에 따라 경제성이 달라짐"],
+    watermark: "sun" as const,
   },
   {
-    icon: "📡",
-    title: "한국도 기반은 갖춰졌다",
-    body: "한국전력의 지능형 원격검침 인프라(AMI)가 2024년 전국 약 2,005만 호에 구축을 마치며 실시간 전력 데이터 기반이 마련됐습니다. 다만 이 데이터를 가정이 직접 거래·절감에 활용하도록 돕는 서비스는 아직 부족합니다.",
-    tag: "AMI 전국 구축 완료",
+    title: "한국도 전력 데이터를 활용 가능",
+    body: ["AMI 구축으로 가정의 전력 데이터를 활용할 기반은 충분 이제 이 데이터를 실제 절감과 의사결정으로 연결해야 함"],
+    watermark: "data" as const,
   },
 ];
 
@@ -39,23 +122,29 @@ const ROLES = [
   {
     eng: "Trade",
     color: "text-amber",
-    border: "border-amber",
-    title: "쌀 때 사서, 비쌀 때 팝니다",
-    body: "실시간 요금과 태양광 발전량을 미리 예측해, 충전과 판매 시점을 자동으로 정합니다.",
+    border: "border-amber/50",
+    bg: "bg-amber-soft",
+    sub: "전력 거래",
+    title: "더 유리한 시간에 전력을 활용하세요",
+    body: ["전력 가격과 태양광 발전량을 확인하고", "구매·판매 시점을 판단할 수 있습니다."],
   },
   {
     eng: "Save",
     color: "text-teal",
-    border: "border-teal",
-    title: "누진 구간을 넘기 전에 알립니다",
-    body: "이번 달 사용량을 미리 예측하고, 누진 구간 초과가 예상되면 미리 알려 드립니다.",
+    border: "border-teal/50",
+    bg: "bg-teal-soft",
+    sub: "전기요금 절감",
+    title: "이번 달 전기요금을 미리 확인하세요",
+    body: ["예상 사용량과 누진 구간을 분석해", "요금이 크게 늘기 전에 알려드립니다."],
   },
   {
     eng: "Protect",
     color: "text-danger",
-    border: "border-danger",
-    title: "이상 신호를 놓치지 않습니다",
-    body: "평소 패턴을 학습해 이상을 감지하면 알립니다. 출장·여행처럼 정상인 경우는 사후에 확인합니다.",
+    border: "border-danger/50",
+    bg: "bg-danger-soft",
+    sub: "이상 사용 감지",
+    title: "평소와 다른 전력 사용을 찾아냅니다",
+    body: ["가전별 전력 패턴을 분석해", "평소와 다른 사용이 발생하면 알려드립니다."],
   },
 ];
 
@@ -63,90 +152,74 @@ export default function Home() {
   return (
     <div className="space-y-12">
       {/* 히어로 */}
-      <section className="card overflow-hidden">
-        <div className="grid gap-6 p-8 md:grid-cols-[1.45fr_1fr] md:p-10">
+      <section className="card relative overflow-hidden">
+        <HeroBg />
+        <div className="relative grid gap-6 px-8 py-6 md:grid-cols-[1.45fr_1fr] md:px-10 md:py-7">
           <div className="self-center">
             <div className="badge bg-amber-soft text-amber">
               ① 사회문제 해결을 위한 AI · 융합·응용기술 아이디어
             </div>
-            <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight md:text-[2.6rem]">
-              전기를 <span className="text-amber">사고팔고</span>, 아끼고,{" "}
-              <span className="text-teal">지켜주는</span>
-              <br />
-              집 안의 전력 비서
-            </h1>
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-600">
-              라즈베리파이 한 대만 두면, 전기가 쌀 때 쓰고 남는 태양광은 비쌀 때 파는 것까지 알아서 관리합니다.
-              혼자 사는 집이라면 이상 신호도 함께 살핍니다. 모든 데이터는 집 밖으로 나가지 않습니다.
+            <p className="mt-1.5 text-base font-semibold text-slate-500">
+              WattWise Pi — 엣지 AI 기반 가정용 전력 예측·맞춤형 절전 비서
             </p>
-            <div className="mt-6 flex flex-wrap gap-2">
-              <Link href="/why" className="btn-amber">왜 필요한가</Link>
-              <Link href="/solar" className="btn-primary">☀️ 태양광·거래</Link>
-              <Link href="/anomaly" className="btn-ghost">이상탐지 방법</Link>
+            <h1 className="mt-3 whitespace-nowrap text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl md:text-[2.1rem] lg:text-[2.6rem] xl:text-[2.9rem]">
+              우리 집 전력, <span className="text-amber">한눈에</span> 보고 <span className="text-teal">똑똑하게</span> 관리하세요
+            </h1>
+            <div className="mt-3 max-w-xl text-base leading-relaxed text-slate-600">
+              <p className="text-xl font-bold text-ink">사용량 확인부터 태양광 수익 계산까지</p>
+              <ul className="mt-1.5 space-y-1">
+                <li>· 지금 우리 집은 전기를 얼마나 쓰고 있을까요?</li>
+                <li>· 태양광을 설치하면 전기요금은 얼마나 줄어들까요?</li>
+                <li>· 남는 전력은 판매하면 얼마를 받을 수 있을까요?</li>
+              </ul>
+              <p className="mt-2 font-bold">전력 데이터를 바탕으로 절감액과 예상 수익을 직접 확인해보세요.</p>
             </div>
           </div>
           <div className="self-center">
-            <Shot src={`${BP}/deploy/room-setup.jpg`} caption="자취방 현장에서 라즈베리파이로 직접 전력 측정" h="h-64 md:h-full" />
+            <HeroArt h="h-64 md:h-72 lg:h-80" />
           </div>
+        </div>
+      </section>
+
+      {/* What We Do */}
+      <section>
+        <div className="eyebrow !text-ink text-center text-2xl normal-case tracking-normal md:text-3xl">전력 관리, 한곳에서</div>
+        <div className="mt-5 grid gap-4 md:grid-cols-3">
+          {ROLES.map((r) => (
+            <div key={r.eng} className={`card border-t-4 p-6 ${r.border}`}>
+              <div className={`text-base font-bold ${r.color}`}>{r.sub}</div>
+              <div className="mt-2 text-[1.05rem] font-bold text-ink">{r.title}</div>
+              <p className="mt-1.5 text-sm leading-relaxed text-slate-500">
+                {r.body.map((line, i) => (
+                  <span key={i}>
+                    {line}
+                    {i < r.body.length - 1 && <br />}
+                  </span>
+                ))}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* 전력은 이제 사고파는 것 */}
       <section>
-        <div className="eyebrow">The Shift</div>
-        <h2 className="section-title">전기는 이제 쓰기만 하는 대상이 아닙니다</h2>
-        <p className="section-sub">
-          해외에서는 이미 가정 단위로 전기를 사고팝니다. 한국도 재생에너지 확대와 요금제 개편으로 같은 방향을 향하고 있습니다.
-        </p>
+        <h2 className="section-title text-center text-2xl md:text-3xl">전력을 사고파는 시대가 시작됐습니다</h2>
         <div className="mt-5 grid gap-4 md:grid-cols-3">
           {CASES.map((c) => (
-            <div key={c.title} className="card p-6">
-              <div className="text-3xl">{c.icon}</div>
-              <div className="mt-3 font-bold">{c.title}</div>
-              <p className="mt-1 text-sm leading-relaxed text-slate-500">{c.body}</p>
-              <div className="mt-3">
-                <span className="chip bg-slate-100 text-slate-600">{c.tag}</span>
-              </div>
+            <div key={c.title} className="card relative overflow-hidden p-6 text-center">
+              <CardWatermark variant={c.watermark} />
+              <div className="relative text-lg font-bold text-ink">{c.title}</div>
+              <p className="relative mt-1.5 text-sm leading-relaxed text-slate-500">
+                {c.body.map((line, i) => (
+                  <span key={i}>
+                    {line}
+                    {i < c.body.length - 1 && <br />}
+                  </span>
+                ))}
+              </p>
             </div>
           ))}
-        </div>
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={`${BP}/img/grid-sunset.jpg`} alt="해질녘 송전탑과 전력망" className="h-56 w-full rounded-xl border border-slate-200 object-cover" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={`${BP}/img/eu-solar.jpg`} alt="유럽 주택 지붕의 태양광 패널" className="h-56 w-full rounded-xl border border-slate-200 object-cover" />
-        </div>
-        <p className="mt-2 text-[11px] text-slate-400">
-          이미지 · Novoklimov, Marta Victoria · Wikimedia Commons (CC BY 4.0 / CC BY-SA 4.0)
-        </p>
-      </section>
-
-      {/* What We Do */}
-      <section>
-        <div className="eyebrow">What We Do</div>
-        <h2 className="section-title">한 대의 라즈베리파이가 맡는 세 가지 역할</h2>
-        <p className="section-sub">거래로 벌고, 예측으로 아끼고, 이상탐지로 지킵니다.</p>
-        <div className="mt-5 grid gap-4 md:grid-cols-3">
-          {ROLES.map((r) => (
-            <div key={r.eng} className={`card border-t-4 p-6 ${r.border}`}>
-              <div className={`text-xs font-bold uppercase tracking-[0.18em] ${r.color}`}>{r.eng}</div>
-              <div className="mt-2 text-[1.05rem] font-bold text-ink">{r.title}</div>
-              <p className="mt-1.5 text-sm leading-relaxed text-slate-500">{r.body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 미래 트렌드 배너 */}
-      <section className="card bg-ink p-8 text-white">
-        <div className="eyebrow !text-amber">Looking Ahead</div>
-        <p className="max-w-3xl text-lg font-bold leading-snug">
-          전기를 사고파는 일은 점점 일상이 됩니다. 그때 가정에서 알아서 거래하고 관리해 주는 도구가 있다면, 누구나 손쉽게 참여할 수 있습니다.
-        </p>
-        <div className="mt-4">
-          <Link href="/why" className="inline-block rounded-lg bg-amber px-4 py-2 text-sm font-bold text-white">
-            왜 필요한지 보기 →
-          </Link>
         </div>
       </section>
     </div>
