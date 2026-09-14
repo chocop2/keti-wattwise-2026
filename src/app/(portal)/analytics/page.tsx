@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -23,7 +23,6 @@ import {
   applianceBreakdown,
   solar,
   SOLAR_DEFAULT,
-  forecastSeries,
   hourlyProfile,
   weekdayProfile,
   monthlyTrend,
@@ -36,9 +35,74 @@ const AMBER = "#E39A00";
 const TEAL = "#0A9AA8";
 const INK = "#1F2328";
 
+const APPLIANCE_ICONS: Record<string, string> = { tv: "📺", 에어컨: "❄️", 제습기: "💧", 세탁기: "🧺" };
+const HOUSEHOLD: Record<string, string> = { 정빈: "1인가구", 진규: "1인가구", 채연: "4인가구" };
+
+type ApplianceMeta = { id: string; label: string; seriesIds: string[] };
+type ForecastPoint = { timestamp: string; actual?: number; prediction_kwh?: number; "0.1"?: number; "0.5"?: number; "0.9"?: number };
+type ForecastResult = { seriesId: string; elapsedSeconds: number; history: ForecastPoint[]; forecast: ForecastPoint[] };
+type ForecastState = { loading: boolean; error?: string; data?: ForecastResult };
+
+function buildApplianceChartData(result: ForecastResult) {
+  const history = result.history.slice(-48).map((point) => ({ t: point.timestamp, actual: point.actual, pred: null as number | null, lo: null as number | null, hi: null as number | null }));
+  const last = history.at(-1);
+  const forecast = result.forecast.map((point) => {
+    const p = point["0.5"] ?? point.prediction_kwh ?? 0;
+    return { t: point.timestamp, actual: null as number | null, pred: p, lo: point["0.1"] ?? p, hi: point["0.9"] ?? p };
+  });
+  return last ? [...history, { ...last, pred: last.actual ?? null, lo: last.actual ?? null, hi: last.actual ?? null }, ...forecast] : forecast;
+}
+
 export default function AnalyticsPage() {
   const [monthKwh, setMonthKwh] = useState(366);
   const [sol, setSol] = useState<SolarInput>(SOLAR_DEFAULT);
+  const [appliances, setAppliances] = useState<ApplianceMeta[]>([]);
+  const [selectedAppliance, setSelectedAppliance] = useState("");
+  const [selectedSeries, setSelectedSeries] = useState("");
+  const [forecast, setForecast] = useState<ForecastState>({ loading: true });
+
+  useEffect(() => {
+    fetch("/api/deploy/forecast")
+      .then((res) => res.json())
+      .then((data: { appliances: ApplianceMeta[] }) => {
+        const list = data.appliances ?? [];
+        setAppliances(list);
+        setSelectedAppliance(list[0]?.id ?? "");
+        setSelectedSeries(list[0]?.seriesIds[0] ?? "");
+      })
+      .catch(() => setForecast({ loading: false, error: "실측 목록을 불러오지 못했습니다." }));
+  }, []);
+
+  useEffect(() => {
+    if (!selectedAppliance || !selectedSeries) return;
+    let cancelled = false;
+    setForecast({ loading: true });
+    fetch("/api/deploy/forecast", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ appliance: selectedAppliance, seriesId: selectedSeries }),
+    })
+      .then((res) => res.json())
+      .then((result: ForecastResult & { error?: string }) => {
+        if (cancelled) return;
+        setForecast(result.error ? { loading: false, error: result.error } : { loading: false, data: result });
+      })
+      .catch((e: Error) => {
+        if (cancelled) return;
+        setForecast({ loading: false, error: e.message });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedAppliance, selectedSeries]);
+
+  const activeAppliance = appliances.find((a) => a.id === selectedAppliance);
+
+  function chooseAppliance(id: string) {
+    const next = appliances.find((a) => a.id === id);
+    setSelectedAppliance(id);
+    setSelectedSeries(next?.seriesIds[0] ?? "");
+  }
 
   const b = bill(monthKwh);
   const tier = tierOf(monthKwh);
@@ -46,7 +110,6 @@ export default function AnalyticsPage() {
   const nxt = daysToNextTier(monthKwh, dailyAvg);
   const appl = useMemo(() => applianceBreakdown(monthKwh), [monthKwh]);
   const s = useMemo(() => solar(sol), [sol]);
-  const fc = useMemo(() => forecastSeries(), []);
   const hp = useMemo(() => hourlyProfile(), []);
   const wp = useMemo(() => weekdayProfile(), []);
   const mt = useMemo(() => monthlyTrend(), []);
@@ -98,21 +161,70 @@ export default function AnalyticsPage() {
 
       {/* 예측 */}
       <section className="card p-5">
-        <div className="text-sm font-bold">사용량 예측 · Chronos-Bolt-Tiny</div>
-        <div className="mt-1 text-xs text-slate-400">최근 24시간 실측(진한 선) + 향후 12시간 예측(점선·불확실성 밴드)</div>
-        <div className="mt-4 h-64">
-          <ResponsiveContainer>
-            <ComposedChart data={fc} margin={{ left: -8, right: 8, top: 8 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#eef1f4" />
-              <XAxis dataKey="t" tick={{ fontSize: 10, fill: "#94a3b8" }} interval={3} />
-              <YAxis tick={{ fontSize: 11, fill: "#94a3b8" }} unit="W" width={46} />
-              <Tooltip formatter={(v: number | null) => (v == null ? "-" : `${Math.round(v)}W`)} />
-              <Area dataKey="lo" stroke="none" fill="transparent" isAnimationActive={false} />
-              <Area dataKey="hi" stroke="none" fill={AMBER} fillOpacity={0.12} isAnimationActive={false} />
-              <Line dataKey="actual" stroke={INK} strokeWidth={2.5} dot={false} name="실측" isAnimationActive={false} />
-              <Line dataKey="pred" stroke={AMBER} strokeWidth={2.5} strokeDasharray="5 4" dot={false} name="예측" isAnimationActive={false} />
-            </ComposedChart>
-          </ResponsiveContainer>
+        <div className="text-sm font-bold">가전별 사용량 예측 · Chronos-2 (자취방 실측)</div>
+        <div className="mt-1 text-xs text-slate-400">최근 48시간 실측(진한 선) + 향후 24시간 예측(주황 점선·10–90% 불확실성 밴드)</div>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          {appliances.map((a) => (
+            <button
+              key={a.id}
+              onClick={() => chooseAppliance(a.id)}
+              className={`rounded-xl border px-3 py-2 text-sm transition ${selectedAppliance === a.id ? "border-amber bg-amber-soft font-bold text-ink" : "border-slate-200 text-slate-600 hover:border-slate-300"}`}
+            >
+              <span className="mr-1.5">{APPLIANCE_ICONS[a.id]}</span>
+              {a.id === "tv" ? "TV" : a.id}
+            </button>
+          ))}
+        </div>
+
+        {activeAppliance && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {activeAppliance.seriesIds.map((sid) => {
+              const person = sid.split("_")[0];
+              return (
+                <button
+                  key={sid}
+                  onClick={() => setSelectedSeries(sid)}
+                  className={`rounded-lg border px-2.5 py-1.5 text-xs transition ${selectedSeries === sid ? "border-teal bg-teal-soft font-bold text-teal" : "border-slate-200 text-slate-500 hover:border-slate-300"}`}
+                >
+                  {person} · {HOUSEHOLD[person] ?? "가구 정보 없음"}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        <div className="mt-4 rounded-xl border border-slate-200 p-4">
+          <div className="flex items-center justify-between">
+            <div className="text-sm font-bold">
+              <span className="mr-1.5">{APPLIANCE_ICONS[selectedAppliance]}</span>
+              {selectedAppliance === "tv" ? "TV" : selectedAppliance}
+            </div>
+            {forecast.data && <div className="text-[11px] text-slate-400">{forecast.data.seriesId} · 추론 {forecast.data.elapsedSeconds.toFixed(1)}초</div>}
+          </div>
+          <div className="mt-2 h-64">
+            {forecast.loading ? (
+              <div className="flex h-full items-center justify-center text-xs text-slate-400">
+                <span className="mr-2 h-3.5 w-3.5 animate-spin rounded-full border-2 border-slate-300 border-t-slate-500" />
+                모델 예측 중… (첫 실행은 로딩으로 시간이 걸릴 수 있어요)
+              </div>
+            ) : forecast.error ? (
+              <div className="flex h-full items-center justify-center px-3 text-center text-xs text-danger">{forecast.error}</div>
+            ) : forecast.data ? (
+              <ResponsiveContainer>
+                <ComposedChart data={buildApplianceChartData(forecast.data)} margin={{ left: -8, right: 8, top: 8 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#eef1f4" />
+                  <XAxis dataKey="t" hide />
+                  <YAxis tick={{ fontSize: 11, fill: "#94a3b8" }} width={46} tickFormatter={(v) => v.toFixed(2)} />
+                  <Tooltip formatter={(v: number | null) => (v == null ? "-" : `${v.toFixed(3)}kWh`)} />
+                  <Area dataKey="lo" stroke="none" fill="transparent" isAnimationActive={false} />
+                  <Area dataKey="hi" stroke="none" fill={AMBER} fillOpacity={0.14} isAnimationActive={false} />
+                  <Line dataKey="actual" stroke={INK} strokeWidth={2.5} dot={false} name="실측" isAnimationActive={false} />
+                  <Line dataKey="pred" stroke={AMBER} strokeWidth={2.5} strokeDasharray="5 4" dot={false} name="예측" isAnimationActive={false} />
+                </ComposedChart>
+              </ResponsiveContainer>
+            ) : null}
+          </div>
         </div>
       </section>
 

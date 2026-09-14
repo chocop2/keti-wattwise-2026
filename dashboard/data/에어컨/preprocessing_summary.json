@@ -1,0 +1,20 @@
+{
+  "appliance": "에어컨",
+  "channel_id": "ch13",
+  "dataset": "measurement",
+  "source_files": 57,
+  "series": 3,
+  "series_ids": [
+    "정빈_에어컨",
+    "진규_에어컨",
+    "채연_에어컨"
+  ],
+  "hourly_rows": 1368,
+  "valid_target_rows": 1368,
+  "low_coverage_rows": 0,
+  "minimum_hourly_coverage": 0.8,
+  "period_start": "2023-08-15 00:00:00",
+  "period_end": "2023-09-02 23:00:00",
+  "output": "/Users/jungbin/Desktop/project/keti/실측/preprocessing_data/에어컨/chronos2/chronos_hourly.parquet",
+  "model_input": "/Users/jungbin/Desktop/project/keti/실측/preprocessing_data/에어컨/chronos2/chronos_model_input.parquet"
+}

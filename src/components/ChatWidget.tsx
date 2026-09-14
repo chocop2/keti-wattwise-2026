@@ -10,6 +10,7 @@ export default function ChatWidget() {
     { role: "bot", text: "안녕하세요! WattWise 도우미예요 ⚡ 무엇이든 물어보세요." },
   ]);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -19,7 +20,7 @@ export default function ChatWidget() {
   }, []);
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [msgs, open]);
+  }, [msgs, open, loading]);
 
   function dismiss() {
     setDismissed(true);
@@ -27,12 +28,16 @@ export default function ChatWidget() {
       localStorage.setItem("ww_chat_dismissed", "1");
     } catch {}
   }
-  function send(text: string) {
+  async function send(text: string) {
     const q = text.trim();
     if (!q) return;
-    setMsgs((m) => [...m, { role: "user", text: q }]);
+    const next: Msg[] = [...msgs, { role: "user", text: q }];
+    setMsgs(next);
     setInput("");
-    setTimeout(() => setMsgs((m) => [...m, { role: "bot", text: answer(q) }]), 350);
+    setLoading(true);
+    const reply = await answer(next);
+    setLoading(false);
+    setMsgs((m) => [...m, { role: "bot", text: reply }]);
   }
 
   if (dismissed) return null;
@@ -67,7 +72,7 @@ export default function ChatWidget() {
               <span className="text-lg">⚡</span>
               <div>
                 <div className="text-sm font-bold">WattWise 도우미</div>
-                <div className="text-[11px] text-white/60">프로젝트 안내 · 지식기반</div>
+                <div className="text-[11px] text-white/60">로컬 sLLM · Qwen2.5-1.5B</div>
               </div>
             </div>
             <button onClick={() => setOpen(false)} aria-label="닫기" className="text-white/70 hover:text-white">▾</button>
@@ -84,13 +89,22 @@ export default function ChatWidget() {
                 />
               </div>
             ))}
+            {loading && (
+              <div className="flex justify-start">
+                <div className="flex items-center gap-1.5 rounded-2xl border border-slate-200 bg-white px-3 py-2.5">
+                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300 [animation-delay:-0.3s]" />
+                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300 [animation-delay:-0.15s]" />
+                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300" />
+                </div>
+              </div>
+            )}
             <div ref={endRef} />
           </div>
 
           <div className="border-t border-slate-100 bg-white px-3 pt-2">
             <div className="flex flex-wrap gap-1.5 pb-2">
               {SUGGESTIONS.map((s) => (
-                <button key={s} onClick={() => send(s)} className="rounded-full border border-slate-200 px-2.5 py-1 text-[11px] text-slate-600 hover:bg-slate-50">
+                <button key={s} onClick={() => send(s)} disabled={loading} className="rounded-full border border-slate-200 px-2.5 py-1 text-[11px] text-slate-600 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50">
                   {s}
                 </button>
               ))}
@@ -105,10 +119,11 @@ export default function ChatWidget() {
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
+                disabled={loading}
                 placeholder="궁금한 걸 물어보세요…"
-                className="flex-1 rounded-full border border-slate-200 px-4 py-2 text-sm outline-none focus:border-teal"
+                className="flex-1 rounded-full border border-slate-200 px-4 py-2 text-sm outline-none focus:border-teal disabled:opacity-50"
               />
-              <button className="rounded-full bg-ink px-4 py-2 text-sm font-bold text-white">↑</button>
+              <button disabled={loading} className="rounded-full bg-ink px-4 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50">↑</button>
             </form>
           </div>
         </div>
