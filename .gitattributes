@@ -1,1 +1,2 @@
 dashboard/models/**/model.safetensors filter=lfs diff=lfs merge=lfs -text
+household_chronos2/checkpoint/model.safetensors filter=lfs diff=lfs merge=lfs -text
