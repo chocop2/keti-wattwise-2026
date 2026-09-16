@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
   ResponsiveContainer,
   BarChart,
@@ -8,7 +8,6 @@ import {
   LineChart,
   Line,
   ComposedChart,
-  Area,
   XAxis,
   YAxis,
   Tooltip,
@@ -24,11 +23,11 @@ import {
   TARGETS,
   simulate,
   cityCompare,
-  type TargetKind,
   type SolarPVInput,
 } from "@/lib/solarpv";
 import { won } from "@/lib/domain";
 import dynamic from "next/dynamic";
+import SolarBreakEvenCalculator from "@/components/SolarBreakEvenCalculator";
 
 const BuildingSolarMap = dynamic(() => import("@/components/BuildingSolarMap"), {
   ssr: false,
@@ -70,16 +69,15 @@ const COST = [
 ];
 
 export default function SolarPage() {
-  const [target, setTarget] = useState<TargetKind>("가정");
   const [cityIdx, setCityIdx] = useState(0);
-  const [systemKw, setSystemKw] = useState(TARGETS["가정"].systemKw);
+  const [systemKw, setSystemKw] = useState<number>(TARGETS["가정"].systemKw);
   const [tilt, setTilt] = useState(30);
   const [azimuth, setAzimuth] = useState(0);
   const [selfRate, setSelfRate] = useState(0.5);
   const [sellPerKwh, setSellPerKwh] = useState(130);
   const [subsidyOn, setSubsidyOn] = useState(true);
 
-  const t = TARGETS[target];
+  const t = TARGETS["가정"];
   const city = CITIES[cityIdx];
   const inp: SolarPVInput = {
     lat: city.lat,
@@ -95,31 +93,17 @@ export default function SolarPage() {
     sellPerKwh,
     selfRate,
   };
-  const r = useMemo(() => simulate(inp), [JSON.stringify(inp)]);
-  const cc = useMemo(() => cityCompare(inp), [systemKw, tilt, azimuth]);
-
-  function pick(k: TargetKind) {
-    setTarget(k);
-    setSystemKw(TARGETS[k].systemKw);
-  }
+  const r = simulate(inp);
+  const cc = cityCompare(inp);
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="section-title">☀️ RE100 태양광 시뮬레이터</h1>
+        <h1 className="section-title">☀️ 가정용 태양광 시뮬레이터</h1>
         <p className="mt-1 text-sm text-slate-500">
           위치·경사·방위에 따른 발전량을 추정하고, 자가소비 절감 + 잉여 전력 판매(전력거래) 수익으로 <b>RE100 달성률·손익분기</b>를 계산합니다.
           <span className="ml-1 text-slate-400">모델: pvlib 방법론(청천일사·경사면 전이·PVWatts) 간이 구현.</span>
         </p>
-      </div>
-
-      {/* 대상 유형 */}
-      <div className="flex flex-wrap gap-2">
-        {(Object.keys(TARGETS) as TargetKind[]).map((k) => (
-          <button key={k} onClick={() => pick(k)} className={`btn ${target === k ? "btn-primary" : "btn-ghost"}`}>
-            {k === "가정" ? "🏠 가정" : k === "기업" ? "🏢 기업" : "🏛️ 공공기관"}
-          </button>
-        ))}
       </div>
 
       {/* KPI */}
@@ -195,7 +179,7 @@ export default function SolarPage() {
             ))}
           </select>
         </div>
-        <Slider label={`시스템 용량 · ${systemKw}kW`} min={1} max={target === "가정" ? 10 : 300} v={systemKw} on={setSystemKw} />
+        <Slider label={`시스템 용량 · ${systemKw}kW`} min={1} max={10} v={systemKw} on={setSystemKw} />
         <Slider label={`설치 경사각 · ${tilt}°`} min={0} max={60} v={tilt} on={setTilt} />
         <Slider label={`방위 · ${azimuth === 0 ? "정남" : azimuth < 0 ? `동${-azimuth}°` : `서${azimuth}°`}`} min={-90} max={90} v={azimuth} on={setAzimuth} />
         <Slider label={`자가소비율 · ${(selfRate * 100).toFixed(0)}%`} min={0} max={100} v={Math.round(selfRate * 100)} on={(v) => setSelfRate(v / 100)} />
@@ -239,6 +223,8 @@ export default function SolarPage() {
           </div>
         </div>
       </div>
+
+      <SolarBreakEvenCalculator />
 
       {/* 손익분기 + 도시 비교 */}
       <div className="grid gap-4 lg:grid-cols-2">

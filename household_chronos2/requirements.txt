@@ -1,0 +1,9 @@
+chronos-forecasting==2.3.1
+torch==2.13.0
+transformers==5.14.1
+pandas==2.3.3
+numpy==2.2.6
+pyarrow==25.0.0
+holidays==0.101
+matplotlib>=3.7
+scikit-learn>=1.3

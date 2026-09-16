@@ -15,7 +15,9 @@ import {
   Cell,
 } from "recharts";
 import { HOUSEHOLDS, allCalc, calc, houseAnswer, homeSolar, type HouseholdCalc } from "@/lib/households";
-import { anomaly, won } from "@/lib/domain";
+import { won } from "@/lib/domain";
+import { householdAnomaly, type AnomalyScenario } from "@/lib/householdAnomaly";
+import AnomalyMethodology from "@/components/AnomalyMethodology";
 import dynamic from "next/dynamic";
 
 const BuildingSolarMap = dynamic(() => import("@/components/BuildingSolarMap"), {
@@ -27,7 +29,6 @@ const BuildingSolarMap = dynamic(() => import("@/components/BuildingSolarMap"), 
 
 const AMBER = "#E39A00";
 const TEAL = "#0A9AA8";
-const DANGER = "#D8432B";
 
 type Msg = { role: "user" | "bot"; text: string };
 const has = (q: string, ...k: string[]) => k.some((x) => q.includes(x));
@@ -42,7 +43,7 @@ export default function HouseholdsPage() {
       <div>
         <h1 className="section-title">🏠 스마트홈 진단</h1>
         <p className="mt-1 text-sm text-slate-500">
-          가정을 선택하면 가전별 사용량을 뜯어보고, 통합 전력량·요금과 절약 포인트를 챗봇에게 물어볼 수 있어요. 모든 수치는 정격전력×사용시간 기반 추정입니다.
+          가정 A~E를 선택해 사용량·요금과 이상탐지를 함께 확인하세요. 사용량은 정격전력×사용시간 추정치이며, 이상탐지는 가상 데이터와 규칙 기반 시나리오입니다.
         </p>
       </div>
 
@@ -52,11 +53,11 @@ export default function HouseholdsPage() {
             <button
               key={cc.hh.id}
               onClick={() => setSel(cc.hh.id)}
-              className={`card p-5 text-left transition hover:shadow-pop ${cc.hh.elderly ? "ring-2 ring-danger/30" : ""}`}
+              className="card p-5 text-left transition hover:shadow-pop"
             >
               <div className="flex items-start justify-between">
                 <div className="text-3xl">{cc.hh.emoji}</div>
-                {cc.hh.elderly && <span className="badge bg-danger-soft text-danger">🛟 관심 필요</span>}
+                <span className="badge bg-teal-soft text-teal">이상탐지 데모</span>
               </div>
               <div className="mt-3 font-bold">{cc.hh.name}</div>
               <div className="text-xs text-slate-400">{cc.hh.persons}</div>
@@ -72,7 +73,7 @@ export default function HouseholdsPage() {
           ))}
         </div>
       ) : (
-        <Detail c={c} onBack={() => setSel(null)} />
+        <Detail key={c.hh.id} c={c} onBack={() => setSel(null)} />
       )}
     </div>
   );
@@ -90,17 +91,27 @@ function Kpi({ label, value, sub, tone = "text-ink" }: { label: string; value: s
 
 function Detail({ c, onBack }: { c: HouseholdCalc; onBack: () => void }) {
   const elderly = !!c.hh.elderly;
+  const [scenario, setScenario] = useState<AnomalyScenario>("normal");
+  const [modelScore, setModelScore] = useState<{ score: number; threshold: number; isAnomaly: boolean } | null>(null);
   const [aFrom, setAFrom] = useState(14);
   const [aNow, setANow] = useState(17);
   const aNowH = Math.max(aFrom, aNow);
-  const an = useMemo(() => (elderly ? anomaly(aFrom, aNowH) : null), [elderly, aFrom, aNowH]);
-  const anTone = an ? (an.tier === "경보" ? "#D8432B" : an.tier === "주의" ? "#E39A00" : "#12A150") : "#D8432B";
+  const an = useMemo(() => householdAnomaly(c.hh, scenario, aFrom, aNowH), [c.hh, scenario, aFrom, aNowH]);
+  const anTone = an.tier === "경보" ? "#D8432B" : an.tier === "주의" || an.tier === "관심" ? "#E39A00" : "#0A9AA8";
   const chartData = c.items.map((a) => ({ name: `${a.icon} ${a.name}`, kwh: +a.monthlyKwh.toFixed(1) }));
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/anomaly", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ scenario }) })
+      .then((res) => res.json())
+      .then((data) => { if (!cancelled && typeof data.score === "number") setModelScore(data); })
+      .catch(() => { if (!cancelled) setModelScore(null); });
+    return () => { cancelled = true; };
+  }, [scenario]);
 
   const [msgs, setMsgs] = useState<Msg[]>([
     {
       role: "bot",
-      text: `${c.hh.name} 데이터예요 🔌 “제일 많이 쓰는 가전?”, “뭘 줄여야 해?”${elderly ? ", “이 어르신 이상 있어?”" : ""} 물어보세요.`,
+      text: `${c.hh.name}의 추정 데이터와 이상탐지 데모입니다 🔌 “제일 많이 쓰는 가전?”, “이 집 이상 있어?”, “정상으로 되돌려”를 물어보세요.`,
     },
   ]);
   const [input, setInput] = useState("");
@@ -111,15 +122,21 @@ function Detail({ c, onBack }: { c: HouseholdCalc; onBack: () => void }) {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
   }, [msgs]);
 
-  function reply(q: string): { text: string; set?: [number, number] } {
-    if (elderly) {
-      if (has(q, "쓰러", "위험 상황", "이상 상황", "비상", "응급", "위험한"))
-        return { set: [13, 20], text: "⚠️ 위험 상황을 재현했어요. 오후 1시부터 활동가전이 멈춘 시나리오로 전환합니다 — 위 이상감지 패널이 ‘경보’로 바뀐 걸 확인하세요." };
-      if (has(q, "정상", "평소", "되돌", "괜찮", "해제", "원래"))
-        return { set: [22, 22], text: "✅ 정상 하루로 되돌렸어요. 활동가전이 평소 범위 안에 있어 위험도가 ‘관심’으로 내려갑니다." };
-      if (an && has(q, "이상", "안부", "위험", "상태", "안전", "지금"))
-        return { text: `🛟 이상 패턴 점검 — 현재 위험도 ‘${an.tier}’(${an.risk}/100). ${an.narrative}` };
-    }
+  function reply(q: string): { text: string; set?: [number, number]; scenario?: AnomalyScenario } {
+    if (has(q, "정상", "되돌", "해제", "원래"))
+      return { scenario: "normal", text: "정상 시나리오로 되돌렸습니다. 모의 점수는 0이며 실제 안전 여부를 판단한 결과는 아닙니다." };
+    if (has(q, "외출", "여행"))
+      return { scenario: "away", text: "외출·여행을 가정한 예외 시나리오로 전환했습니다. 실제 외출을 자동 감지한 것은 아닙니다." };
+    if (has(q, "상시", "계속 켜", "켜져"))
+      return { scenario: "always_on", text: "TV·조명 상시 ON 이상 시나리오로 전환했습니다. exp.py PoC의 이상 유형을 재현합니다." };
+    if (has(q, "취사", "요리"))
+      return { scenario: "cooking_loss", text: "저녁 취사 부하 소실 시나리오로 전환했습니다. exp.py PoC의 이상 유형을 재현합니다." };
+    if (has(q, "야간", "밤"))
+      return { scenario: "night_loss", text: "야간 활동 소실 시나리오로 전환했습니다. exp.py PoC의 이상 유형을 재현합니다." };
+    if (has(q, "쓰러", "위험 상황", "이상 상황", "비상", "응급", "활동 정지"))
+      return { scenario: "inactive", set: [13, 20], text: "활동 정지 시나리오입니다. 13시부터 활동가전 사용량이 감소하고 7시간이 지난 가상 상황으로 전환했습니다." };
+    if (has(q, "이상", "안부", "위험", "상태", "안전", "지금"))
+      return { text: `이상탐지 데모 · ${c.hh.name} — ${an.tier}, 모의 점수 ${an.risk}/100. ${an.narrative}` };
     return { text: houseAnswer(q, c) };
   }
   function send(text: string) {
@@ -128,6 +145,7 @@ function Detail({ c, onBack }: { c: HouseholdCalc; onBack: () => void }) {
     setMsgs((m) => [...m, { role: "user", text: t }]);
     setInput("");
     const r = reply(t);
+    if (r.scenario) setScenario(r.scenario);
     if (r.set) {
       setAFrom(r.set[0]);
       setANow(r.set[1]);
@@ -135,19 +153,15 @@ function Detail({ c, onBack }: { c: HouseholdCalc; onBack: () => void }) {
     setTimeout(() => setMsgs((m) => [...m, { role: "bot", text: r.text }]), 240);
   }
 
-  const chips = elderly
-    ? ["쓰러진 상황 보여줘", "정상으로 되돌려", "이 어르신 이상 있어?", "뭘 줄여야 해?"]
-    : ["제일 많이 쓰는 가전?", "뭘 줄여야 해?", "이 집 요금 얼마?", "에어컨 사용량은?"];
+  const chips = ["이 집 이상 있어?", "활동 정지 보여줘", "정상으로 되돌려", "뭘 줄여야 해?"];
 
-  const actData = an
-    ? an.activity.map((a) => ({
+  const actData = an.activity.map((a) => ({
         hour: a.hour,
         lo: Math.max(0, a.base - a.band),
         band: 2 * a.band,
         base: a.base,
         today: a.hour <= an.nowHour ? a.today : null,
-      }))
-    : [];
+      }));
 
   return (
     <div className="space-y-6">
@@ -158,7 +172,7 @@ function Detail({ c, onBack }: { c: HouseholdCalc; onBack: () => void }) {
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <div className="text-xl font-extrabold">{c.hh.name}</div>
-            {elderly && <span className="badge bg-danger-soft text-danger">🛟 관심 필요</span>}
+            {elderly && <span className="badge bg-slate-100 text-slate-500">고령 1인가구</span>}
           </div>
           <div className="text-xs text-slate-400">{c.hh.persons} · {c.hh.note}</div>
         </div>
@@ -172,43 +186,52 @@ function Detail({ c, onBack }: { c: HouseholdCalc; onBack: () => void }) {
         <Kpi label="최다 사용 가전" value={`${c.top.icon} ${c.top.name}`} sub={`${(c.top.share * 100).toFixed(0)}% · ${won(c.top.cost)}`} tone="text-teal" />
       </div>
 
-      {/* 이상 패턴 (노령 가정만) */}
-      {an && (
-        <section className="card border-danger/30 p-5" style={{ background: "#FDF4F2" }}>
+      {/* 모든 가정에서 확인할 수 있는 이상탐지 시나리오 */}
+      <section id="household-anomaly" className="card scroll-mt-32 p-5">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="text-sm font-bold text-danger">🛟 이상 패턴 감지 — 이 가정은 노령 1인가구로 관심이 필요합니다</div>
-            <span className="badge bg-white" style={{ color: anTone }}>위험도 {an.risk}/100 · {an.tier}</span>
+            <h2 className="text-sm font-bold">🛟 {c.hh.name} · 이상탐지</h2>
+            <div className="flex flex-wrap justify-end gap-2"><span className="badge bg-slate-50" style={{ color: anTone }}>모의 점수 {an.risk}/100 · {an.tier}</span>{modelScore && <span className={`badge ${modelScore.isAnomaly ? "bg-danger-soft text-danger" : "bg-teal-soft text-teal"}`}>AE 오차 {modelScore.score.toFixed(2)} / 임계 {modelScore.threshold.toFixed(2)}</span>}</div>
           </div>
-          <div className="mt-1 text-xs text-slate-500">
-            활동 신호 가전(TV·전기포트·조명)이 평소 범위를 벗어나 <b>{an.lastActiveHour}시부터 활동 정지</b> — 냉장고는 정상 가동 중(외출 아님). 슬라이더나 아래 챗봇으로 상황을 바꿔보세요.
+          <p className="mt-2 rounded-lg bg-amber-soft p-3 text-xs leading-relaxed text-slate-600">
+            exp.py PoC의 합성 정상 패턴과 네 가지 이상 주입 유형을 가정별로 재현한 데모입니다. 저장된 PyTorch 오토인코더 체크포인트를 API에서 로드해 복원 오차를 계산하며, 빠른 시나리오 확인을 위해 모델 입력은 합성 1인가구 패턴입니다.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="이상탐지 시나리오">
+            {([['normal', '정상'], ['always_on', '상시 ON'], ['cooking_loss', '취사 소실'], ['inactive', '활동 정지'], ['night_loss', '야간 소실'], ['away', '외출·여행']] as const).map(([value, label]) => (
+              <button key={value} type="button" aria-pressed={scenario === value} onClick={() => setScenario(value)} className={scenario === value ? "btn-primary" : "btn-ghost"}>{label}</button>
+            ))}
           </div>
-          <div className="mt-3 grid gap-4 sm:grid-cols-2">
-            <div>
-              <div className="label">활동 정지 시작 · {aFrom}시</div>
-              <input type="range" min={6} max={22} value={aFrom} onChange={(e) => setAFrom(+e.target.value)} className="w-full accent-danger" />
-            </div>
-            <div>
-              <div className="label">현재 시각 · {aNowH}시</div>
-              <input type="range" min={aFrom} max={23} value={aNowH} onChange={(e) => setANow(+e.target.value)} className="w-full accent-danger" />
-            </div>
-          </div>
-          <div className="mt-3 h-56">
+          {scenario !== "normal" && <div className="mt-3 grid gap-4 sm:grid-cols-2">
+            <label>
+              <span className="label">사용량 감소 시작 · {aFrom}시</span>
+              <input aria-label="사용량 감소 시작" type="range" min={6} max={22} value={aFrom} onChange={(e) => setAFrom(+e.target.value)} className="w-full accent-teal" />
+            </label>
+            <label>
+              <span className="label">시나리오 시각 · {aNowH}시</span>
+              <input aria-label="시나리오 시각" type="range" min={aFrom} max={23} value={aNowH} onChange={(e) => setANow(+e.target.value)} className="w-full accent-teal" />
+            </label>
+          </div>}
+          <div className="mt-3 text-xs text-slate-500">점선: 가정별 평소 패턴 예시 · 실선: 선택 시나리오 · 음영: 예시 범위 ±20%</div>
+          <div className="mt-3 h-56 overflow-hidden">
             <ResponsiveContainer>
               <ComposedChart data={actData} margin={{ left: -12, right: 8, top: 8 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f1e4e2" />
                 <XAxis dataKey="hour" tickFormatter={(h) => `${h}시`} tick={{ fontSize: 10, fill: "#b08a84" }} interval={2} />
                 <YAxis tick={{ fontSize: 10, fill: "#b08a84" }} unit="W" width={42} />
-                <Tooltip formatter={(v: number | null) => (v == null ? "-" : `${Math.round(v)}W`)} labelFormatter={(h) => `${h}시`} />
+                <Tooltip formatter={(v) => (typeof v === "number" ? `${Math.round(v)}W` : "-")} labelFormatter={(h) => `${h}시`} />
                 <Area dataKey="lo" stackId="b" stroke="none" fill="transparent" isAnimationActive={false} />
                 <Area dataKey="band" stackId="b" stroke="none" fill="#e7cfca" fillOpacity={0.6} isAnimationActive={false} />
-                <Line dataKey="base" stroke="#c9a59e" strokeDasharray="4 4" dot={false} isAnimationActive={false} />
-                <Line dataKey="today" stroke={anTone} strokeWidth={3} dot={false} connectNulls isAnimationActive={false} />
+                <Line name="평소 패턴 예시" dataKey="base" stroke="#c9a59e" strokeDasharray="4 4" dot={false} isAnimationActive={false} />
+                <Line name="선택 시나리오" dataKey="today" stroke={anTone} strokeWidth={3} dot={false} connectNulls isAnimationActive={false} />
               </ComposedChart>
             </ResponsiveContainer>
           </div>
-          <div className="mt-2 rounded-lg bg-white/70 p-3 text-xs text-slate-600">“{an.narrative}”</div>
-        </section>
-      )}
+          <p role="status" className="mt-2 rounded-lg bg-slate-50 p-3 text-xs leading-relaxed text-slate-600">{an.narrative}</p>
+          <p className="mt-2 text-xs text-slate-400">24시간 가동으로 설정된 가전({an.baselineWatts}W)은 활동가전 그래프에서 제외합니다.</p>
+          <details className="mt-5 border-t border-slate-100 pt-4">
+            <summary className="cursor-pointer text-sm font-semibold text-teal">이상탐지 방법론·기존 PoC 참고 자료 보기</summary>
+            <div className="mt-4"><AnomalyMethodology /></div>
+          </details>
+      </section>
 
       {/* 가전별 상세 */}
       <section className="grid gap-4 lg:grid-cols-[1.15fr_1fr]">

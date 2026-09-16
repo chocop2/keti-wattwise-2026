@@ -33,7 +33,7 @@ export function monthlyPOA(lat: number, kt: number, tilt: number, azimuth: numbe
     // 정오 기준 경사면 전이계수 Rb (남향 기준)
     const cosZ = Math.cos(phi - decl);
     const cosT = Math.cos(phi - decl - beta);
-    let rb = cosZ > 0.05 ? cosT / cosZ : 1;
+    const rb = cosZ > 0.05 ? cosT / cosZ : 1;
     const azFactor = Math.max(0.6, Math.cos(azimuth * D2R) * 0.4 + 0.6); // 남(0)=1, 동/서로 갈수록 감소
     let poa = ghi * rb * azFactor;
     poa = Math.max(0.6 * ghi, Math.min(1.7 * ghi, poa));
@@ -87,8 +87,6 @@ export function cityCompare(base: SolarPVInput) {
 
 export const TARGETS = {
   가정: { systemKw: 3, consumptionYr: 4800, costPerKw: 1_600_000, subsidy: 600_000 },
-  기업: { systemKw: 100, consumptionYr: 250_000, costPerKw: 1_300_000, subsidy: 0 },
-  공공기관: { systemKw: 50, consumptionYr: 120_000, costPerKw: 1_400_000, subsidy: 20_000_000 },
 } as const;
 export type TargetKind = keyof typeof TARGETS;
 

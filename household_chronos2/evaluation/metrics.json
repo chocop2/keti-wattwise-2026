@@ -1,0 +1,50 @@
+{
+  "model": "/Users/jungbin/Desktop/project/keti/household_chronos2/checkpoint",
+  "device": "cpu",
+  "mode": "zero-shot rolling day-ahead evaluation with known-future calendar covariates",
+  "validation_data": "/Users/jungbin/Desktop/project/keti/household_chronos2/data/hourly_base.parquet",
+  "context_source": "observed target values from the same Validation house before each forecast origin",
+  "covariate_source": "timestamp-derived known-future calendar features only",
+  "covariates": [
+    "hour_sin",
+    "hour_cos",
+    "weekday_sin",
+    "weekday_cos",
+    "is_weekend",
+    "is_holiday"
+  ],
+  "holiday_feature_enabled": true,
+  "context_length": 168,
+  "prediction_length": 24,
+  "validation_days": 7,
+  "mase_seasonality": 24,
+  "skipped_days": 0,
+  "forecast_rows": 2688,
+  "houses": 16,
+  "overall_hourly": {
+    "n": 2688,
+    "mae": 0.1210810956709455,
+    "rmse": 0.20925754697578902,
+    "smape": 31.424146609754732,
+    "wape": 30.93998987478603,
+    "mase_24_global": 0.7283835697601326,
+    "mase_24_window_macro": 0.7722435055672598,
+    "mase_24_house_macro": 0.77224350556726
+  },
+  "mase": {
+    "seasonality": 24,
+    "global": 0.7283835697601326,
+    "window_macro": 0.7722435055672598,
+    "house_macro": 0.77224350556726,
+    "valid_rows": 2688,
+    "valid_windows": 112,
+    "interpretation": "<1 means better than the seasonal-naive scale; >1 means worse."
+  },
+  "daily_total": {
+    "n": 112,
+    "mae": 1.6328705924280036,
+    "rmse": 2.405478286276967,
+    "smape": 19.356842186564407,
+    "wape": 17.385386531166976
+  }
+}
