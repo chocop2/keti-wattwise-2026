@@ -2,9 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 import { answer, SUGGESTIONS, type Msg } from "@/lib/chatbot";
 
 export default function ChatWidget() {
+  const pathname = usePathname();
+  const router = useRouter();
   const [dismissed, setDismissed] = useState(false);
   const [open, setOpen] = useState(false);
   const [msgs, setMsgs] = useState<Msg[]>([
@@ -29,6 +32,14 @@ export default function ChatWidget() {
       localStorage.setItem("ww_chat_dismissed", "1");
     } catch {}
   }
+  // 지금까지의 대화를 넘겨 상담센터(/chat)에서 크게 이어서 본다.
+  function expand() {
+    try {
+      sessionStorage.setItem("ww_chat_msgs", JSON.stringify(msgs));
+    } catch {}
+    setOpen(false);
+    router.push("/chat");
+  }
   async function send(text: string) {
     const q = text.trim();
     if (!q) return;
@@ -41,7 +52,7 @@ export default function ChatWidget() {
     setMsgs((m) => [...m, { role: "bot", text: reply }]);
   }
 
-  if (dismissed) return null;
+  if (dismissed || pathname === "/chat") return null;
 
   return (
     <>
@@ -76,7 +87,12 @@ export default function ChatWidget() {
                 <div className="text-[11px] text-white/60">상담 가능 · 로컬 AI</div>
               </div>
             </div>
-            <button onClick={() => setOpen(false)} aria-label="닫기" className="text-white/70 hover:text-white">▾</button>
+            <div className="flex items-center gap-1">
+              <button onClick={expand} disabled={loading} aria-label="크게 보기" title="크게 보기" className="flex h-8 w-8 items-center justify-center rounded-lg text-white/70 transition hover:bg-white/10 hover:text-white disabled:opacity-40">
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" /></svg>
+              </button>
+              <button onClick={() => setOpen(false)} aria-label="닫기" title="닫기" className="flex h-8 w-8 items-center justify-center rounded-lg text-white/70 transition hover:bg-white/10 hover:text-white">▾</button>
+            </div>
           </div>
 
           <div className="flex-1 space-y-3 overflow-y-auto bg-slate-50 p-3">

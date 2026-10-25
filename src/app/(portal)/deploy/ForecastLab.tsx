@@ -96,11 +96,10 @@ export default function ForecastLab() {
 
   return (
     <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8">
-      <div className="eyebrow">02 · Live Forecast</div>
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 className="section-title">이 데이터를 실제 모델에 넣었습니다</h2>
-          <p className="section-sub max-w-2xl break-keep">저장된 결과 이미지를 보여주는 것이 아닙니다. 가전과 실증 대상을 선택하면 로컬 Chronos-2 체크포인트가 그 자리에서 다음 24시간을 추론합니다.</p>
+          <h2 className="break-keep text-3xl font-black tracking-[-0.03em] text-[#3D2B1F] md:text-4xl">실제 데이터를 입력해 모델의 예측을 확인합니다</h2>
+          <p className="mt-3 max-w-2xl break-keep text-base text-slate-600">미리 저장한 결과를 보여주는 데 그치지 않습니다. 가전과 실증 대상을 선택하면 로컬에서 Chronos-2 체크포인트를 실행해 향후 24시간의 전력 사용량을 예측합니다.</p>
         </div>
         <span className="badge bg-ok-soft text-ok"><span className="h-1.5 w-1.5 rounded-full bg-ok" />로컬 추론 · 데이터 외부 전송 없음</span>
       </div>
@@ -131,7 +130,7 @@ export default function ForecastLab() {
           {error ? (
             <div className="flex h-full min-h-[380px] items-center justify-center"><div className="max-w-md rounded-xl bg-danger-soft p-5 text-center"><div className="text-2xl">⚠️</div><div className="mt-2 text-sm font-bold text-danger">예측을 실행하지 못했습니다</div><p className="mt-1 text-xs text-slate-600">{error}</p></div></div>
           ) : !result ? (
-            <div className="flex min-h-[380px] flex-col items-center justify-center text-center"><div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-soft text-3xl">〽️</div><div className="mt-4 font-bold">실증 데이터에서 바로 예측합니다</div><p className="mt-2 max-w-sm break-keep text-xs leading-6 text-slate-500">가전과 대상을 선택해 실행해 보세요. 최근 336시간을 모델 입력으로 사용하고, 다음 24시간의 중앙값과 10–90% 불확실성 범위를 함께 계산합니다.</p><div className="mt-4 flex gap-2"><span className="badge bg-slate-100 text-slate-500">실데이터 입력</span><span className="badge bg-slate-100 text-slate-500">로컬 체크포인트</span><span className="badge bg-slate-100 text-slate-500">실시간 추론</span></div></div>
+            <div className="flex min-h-[380px] flex-col items-center justify-center text-center"><div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#FAF6EC]"><svg viewBox="0 0 24 24" className="h-8 w-8" fill="#3D2B1F" aria-hidden><path d="M13.5 2 4.5 13.5h6L9.5 22l9-11.5h-6z" /></svg></div><div className="mt-4 font-bold">실증 데이터에서 바로 예측합니다</div><p className="mt-2 max-w-sm break-keep text-xs leading-6 text-slate-500">가전과 대상을 선택해 실행해 보세요. 최근 336시간을 모델 입력으로 사용하고, 다음 24시간의 중앙값과 10–90% 불확실성 범위를 함께 계산합니다.</p><div className="mt-4 flex gap-2"><span className="badge bg-slate-100 text-slate-500">실데이터 입력</span><span className="badge bg-slate-100 text-slate-500">로컬 체크포인트</span><span className="badge bg-slate-100 text-slate-500">실시간 추론</span></div></div>
           ) : (
             <>
               <div className="grid grid-cols-3 gap-3">
@@ -139,7 +138,7 @@ export default function ForecastLab() {
                 <Metric label="예상 최대 사용" value={peak ? fmt(peak["0.5"] ?? peak.prediction_kwh ?? 0) : "-"} sub={peak ? timeLabel(peak.timestamp) : undefined} />
                 <Metric label="실제 추론 시간" value={`${result.elapsedSeconds.toFixed(1)}초`} sub="로컬 체크포인트" />
               </div>
-              <div className="mt-5 flex items-center justify-between"><div className="text-sm font-bold">최근 실측 · 24시간 예측</div><div className="flex gap-3 text-[11px] text-slate-500"><span>━ 실측</span><span className="text-teal">━ 중앙 예측</span><span>▰ 10–90% 범위</span></div></div>
+              <div className="mt-5 flex items-center justify-between"><div className="text-lg font-black text-[#3D2B1F]">최근 실측 · 24시간 예측</div><div className="flex gap-3 text-xs text-slate-500"><span className="flex items-center gap-1.5"><i className="inline-block h-0.5 w-4 bg-ink" />실측</span><span className="flex items-center gap-1.5"><i className="inline-block h-0.5 w-4 bg-[#2a78d6]" />중앙 예측</span><span className="flex items-center gap-1.5"><i className="inline-block h-2 w-4 bg-[#2a78d6]/15" />10–90% 범위</span></div></div>
               <div className="mt-2 h-72">
                 <ResponsiveContainer>
                   <ComposedChart data={chartData} margin={{ left: 2, right: 8, top: 8 }}>
@@ -148,9 +147,9 @@ export default function ForecastLab() {
                     <YAxis tick={{ fontSize: 10, fill: "#94a3b8" }} width={48} tickFormatter={(v) => `${v}k`} />
                     <Tooltip labelFormatter={(v) => timeLabel(String(v))} formatter={(v: number, name: string) => [fmt(v), name === "actual" ? "실측" : name === "prediction" ? "중앙 예측" : name === "range" ? "예측 범위" : "하한"]} />
                     <Area dataKey="low" stackId="interval" stroke="none" fill="transparent" isAnimationActive={false} />
-                    <Area dataKey="range" stackId="interval" stroke="none" fill="#0A9AA8" fillOpacity={0.16} isAnimationActive={false} />
+                    <Area dataKey="range" stackId="interval" stroke="none" fill="#2a78d6" fillOpacity={0.15} isAnimationActive={false} />
                     <Line dataKey="actual" stroke="#1F2328" strokeWidth={2} dot={false} isAnimationActive={false} />
-                    <Line dataKey="prediction" stroke="#0A9AA8" strokeWidth={2.5} dot={false} isAnimationActive={false} />
+                    <Line dataKey="prediction" stroke="#2a78d6" strokeWidth={2} dot={false} isAnimationActive={false} />
                   </ComposedChart>
                 </ResponsiveContainer>
               </div>

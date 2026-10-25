@@ -44,3 +44,5 @@ dev.log
 
 # local raw measurement exports (Parquet outputs under dashboard/data are tracked)
 /실측 2/
+__pycache__/
+*.pyc

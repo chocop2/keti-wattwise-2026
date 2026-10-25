@@ -1,13 +1,15 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+
+const BP = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 import { usePathname } from "next/navigation";
 import { logout } from "@/app/login/actions";
 
 const LINKS = [
   { href: "/why", label: "소개" },
-  { href: "/chat", label: "챗봇" },
   { href: "/analytics", label: "전력·스마트홈" },
   { href: "/solar", label: "태양광·거래" },
 ];
@@ -27,9 +29,9 @@ export default function Nav({ user }: { user: { name: string; role: string } }) 
     <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/85 backdrop-blur">
       <div className="mx-auto flex min-h-14 max-w-6xl flex-wrap items-center gap-1 px-4 py-2 lg:flex-nowrap lg:py-0">
         <Link href="/" className="mr-2 flex shrink-0 items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-ink text-xs font-black text-white">
-            W
-          </div>
+          <span className="relative h-8 w-8">
+            <Image src={`${BP}/img/watti-face.png`} alt="" fill unoptimized className="object-contain" />
+          </span>
           <span className="text-sm font-extrabold tracking-tight">WattWisePi</span>
         </Link>
         <nav className="order-3 flex w-full flex-wrap items-center gap-0.5 lg:order-none lg:w-auto lg:flex-1">

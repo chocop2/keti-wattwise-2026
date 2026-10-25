@@ -1,38 +1,148 @@
+import Image from "next/image";
 import Link from "next/link";
+
+const BP = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+const photo = (name: string) => `${BP}/img/photos/${name}.jpg`;
 
 export default function Home() {
   return (
-    <div className="space-y-24 pb-12 md:space-y-28">
-      <section className="grid min-h-[650px] overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-pop lg:grid-cols-[1.02fr_0.98fr]">
-        <div className="flex flex-col justify-between p-8 md:p-12 lg:p-14">
-          <div className="flex items-center gap-3"><span className="h-2.5 w-2.5 rounded-full bg-teal" /><span className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">가정 에너지 관리 플랫폼</span></div>
-          <div className="py-14"><h1 className="text-5xl font-black leading-[1.03] tracking-[-0.055em] text-ink md:text-6xl">우리 집 전력,<br />미리 알고<br /><span className="text-teal">더 나은 선택으로.</span></h1><p className="mt-7 max-w-xl text-base leading-8 text-slate-500">WattWise는 전력 사용량과 요금을 미리 예측하고, 평소와 다른 생활 신호를 감지하며, 태양광 잉여 전력의 활용과 거래 판단까지 하나의 흐름으로 연결합니다.</p><div className="mt-9 flex flex-wrap gap-3"><Link href="/households" className="btn-primary !rounded-full px-6 py-3">우리 집 진단 시작 <span>→</span></Link><Link href="/analytics" className="btn-ghost !rounded-full px-6 py-3">전력 사용량 예측하기</Link></div></div>
-          <div className="flex flex-wrap gap-x-8 gap-y-3 border-t border-slate-100 pt-5 text-xs font-semibold text-slate-400"><span>24시간 사용량 예측</span><span>생활 이상 신호</span><span>태양광 잉여전력</span></div>
+    <div className="bleed -mt-8 -mb-8 bg-white">
+      <section className="relative min-h-[640px] overflow-hidden bg-[#FAF6EC] lg:min-h-[700px]">
+        <Image src={photo("family-kitchen")} alt="" fill unoptimized className="hidden scale-110 object-cover blur-2xl lg:block" />
+        <div className="absolute inset-0 hidden bg-gradient-to-r from-[#FAF6EC]/70 via-[#FAF6EC]/45 to-[#FAF6EC]/15 lg:block" />
+        <div className="absolute inset-0 lg:left-[30%] lg:[mask-image:linear-gradient(to_right,transparent,black_20%)]">
+          <Image src={photo("family-kitchen")} alt="주방에 모여 사진을 함께 보는 가족" fill priority unoptimized className="object-cover object-[60%_30%] lg:object-[35%_40%]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#FAF6EC] via-[#FAF6EC]/90 via-45% to-transparent lg:hidden" />
         </div>
-        <div className="relative flex min-h-[560px] items-center justify-center overflow-hidden bg-[#11181c] p-6 md:p-10">
-          <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-teal/25 blur-3xl" /><div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-amber/20 blur-3xl" />
-          <div className="relative w-full max-w-[520px] overflow-hidden rounded-2xl border border-white/10 bg-white/[0.07] p-5 shadow-2xl backdrop-blur md:p-6">
-            <div className="flex items-center justify-between"><div><div className="text-xs text-white/40">오늘의 에너지</div><div className="mt-1 text-lg font-bold text-white">우리 집은 안정적입니다</div></div><span className="rounded-full bg-teal/20 px-3 py-1 text-xs font-bold text-[#54dbe6]">LIVE</span></div>
-            <div className="mt-6 grid grid-cols-3 gap-2"><DarkStat label="현재 사용" value="1.8 kW" /><DarkStat label="오늘 예측" value="12.4 kWh" /><DarkStat label="태양광" value="+4.2 kWh" /></div>
-            <div className="mt-5 rounded-xl bg-black/20 p-4"><div className="flex items-center justify-between text-[11px] text-white/35"><span>24시간 전력 예측</span><span>현재 14:00</span></div><svg viewBox="0 0 440 150" className="mt-3 w-full" aria-hidden><defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#26c6d1" stopOpacity=".35" /><stop offset="1" stopColor="#26c6d1" stopOpacity="0" /></linearGradient></defs><path d="M0 126 C35 120 48 98 78 108 S125 133 154 92 S205 48 238 76 S281 119 315 83 S364 35 440 48 L440 150 L0 150Z" fill="url(#area)" /><path d="M0 126 C35 120 48 98 78 108 S125 133 154 92 S205 48 238 76 S281 119 315 83 S364 35 440 48" fill="none" stroke="#26c6d1" strokeWidth="3" /><path d="M0 132 C50 121 87 129 126 110 S187 87 230 99 S310 106 350 76 S405 58 440 65" fill="none" stroke="#E39A00" strokeWidth="2" strokeDasharray="5 6" opacity=".9" /></svg><div className="mt-2 flex justify-between text-[10px] text-white/25"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div></div>
-            <div className="mt-4 flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3"><div><div className="text-xs font-bold text-white">누진 구간 진입까지 86kWh</div><div className="mt-1 text-[10px] text-white/35">현재 추세로 약 9일 남았습니다</div></div><span className="text-xl text-amber">↗</span></div>
+        <p className="absolute bottom-3 right-4 z-10 rounded-full bg-black/45 px-2.5 py-1 text-[10px] leading-4 text-white/90 backdrop-blur">사진 <a href="https://commons.wikimedia.org/wiki/File:A_family_gathered_in_the_kitchen_at_home_looking_at_photographs_(16308914556).jpg" target="_blank" rel="noreferrer" className="underline">Personal Creations</a>, <a href="https://creativecommons.org/licenses/by/2.0" target="_blank" rel="noreferrer" className="underline">CC BY 2.0</a></p>
+        <div className="relative mx-auto flex min-h-[640px] max-w-6xl items-end px-4 pb-14 pt-10 lg:min-h-[700px] lg:items-center lg:py-12">
+          <div className="max-w-xl">
+            <h1 className="break-keep text-4xl font-black leading-[1.35] tracking-[-0.03em] text-ink md:text-5xl md:leading-[1.35] lg:text-[3.4rem]">
+              <span className="glow-brown">전기요금</span>부터<br /><span className="glow-brown">에너지 효율</span>까지<br />스마트하게
+            </h1>
+            <p className="mt-6 break-keep text-base font-semibold leading-8 text-ink md:text-lg">
+              전력 사용량부터 예상 전기요금까지,<br />에너지 사용 현황을 한눈에 확인하세요.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/households" className="btn !rounded-full bg-[#3D2B1F] px-7 py-3.5 text-base text-white hover:bg-[#2C1F16]">우리 집 진단 시작</Link>
+              <Link href="/analytics" className="btn !rounded-full border border-[#3D2B1F]/25 bg-white/60 px-7 py-3.5 text-base text-[#3D2B1F] hover:bg-white">요금 예측 보기</Link>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="grid gap-12 rounded-[2rem] bg-white px-6 py-10 ring-1 ring-slate-200/80 md:px-10 md:py-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20"><div><p className="text-xs font-black uppercase tracking-[0.2em] text-teal">왜 WattWise가 필요한가</p><h2 className="mt-5 break-keep text-3xl font-black leading-[1.15] tracking-[-0.035em] md:text-4xl xl:text-5xl">사용한 뒤 확인하는 전력,<br />늦게 발견되는 생활 변화.</h2></div><div className="border-t border-slate-200 pt-7 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0"><p className="break-keep text-xl font-semibold leading-9 text-ink">전력 사용 데이터는 매일 쌓이지만, 사용량·요금·생활 변화에 대한 판단으로 이어지기는 어렵습니다.</p><p className="mt-5 break-keep text-base leading-8 text-slate-500">전력 사용량과 요금은 사용한 뒤에야 확인하기 쉽고, 1인 가구의 생활 패턴 변화는 주변에서 빠르게 알아채기 어렵습니다. 여기에 태양광으로 생산하고 남는 전력을 어떻게 활용할지에 대한 판단도 중요해지고 있습니다. WattWise는 하나의 전력 데이터를 예측·생활 이상 신호·잉여 전력 활용으로 연결해 필요한 판단을 더 앞당깁니다.</p><div className="mt-9 grid grid-cols-3 gap-4 border-t border-slate-200 pt-7"><Number value="24h" label="사용량 예측" /><Number value="3" label="핵심 판단" /><Number value="1" label="하나의 전력 데이터" /></div></div></section>
+      <section className="mx-auto max-w-6xl px-4 py-16 md:py-20">
+        <h2 className="flex items-center justify-center gap-3 text-4xl font-black tracking-[-0.03em] text-[#3D2B1F] md:text-[2.75rem]">
+          <svg viewBox="0 0 24 24" className="h-8 w-8 md:h-10 md:w-10" fill="#3D2B1F" aria-hidden><path d="M13.5 2 4.5 13.5h6L9.5 22l9-11.5h-6z" /></svg>
+          WattWise Point
+          <svg viewBox="0 0 24 24" className="h-8 w-8 md:h-10 md:w-10" fill="#3D2B1F" aria-hidden><path d="M13.5 2 4.5 13.5h6L9.5 22l9-11.5h-6z" /></svg>
+        </h2>
+        <div className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6">
+          <Tile href="/analytics" image={photo("kitchen-laptop")} title="사용량·요금 예측" body="내일 24시간 사용량과 이번 달 예상 요금" />
+          <Tile href="/households" image={photo("feature-kettle")} title="가족 안부 확인" body="평소와 다른 생활 신호를 먼저 알림" />
+          <Tile href="/solar" image={photo("solar-roof")} title="태양광 설치 계산" body="우리 집 발전량과 투자 회수 기간" />
+          <Tile href="/trade" image={photo("power-lines")} title="남는 전기 거래" body="잉여 전력을 파는 과정 체험" />
+        </div>
+      </section>
 
-      <section className="rounded-[2rem] bg-[#11181c] p-6 text-white md:p-10 lg:p-12"><div className="flex flex-wrap items-end justify-between gap-5"><div><p className="text-xs font-black uppercase tracking-[0.2em] text-[#54dbe6]">WattWise의 핵심 기능</p><h2 className="mt-4 text-3xl font-black tracking-[-0.035em] md:text-5xl">하나의 전력 데이터, 세 가지 판단.</h2></div><p className="max-w-md text-sm leading-7 text-white/45">같은 전력 데이터를 바탕으로 비용을 미리 보고, 생활 이상 신호를 확인하고, 태양광 잉여 전력의 활용 가능성까지 이어서 판단합니다.</p></div><div className="mt-10 grid gap-3 lg:grid-cols-3"><Product href="/analytics" index="01" title="예측" ko="전력 사용과 요금을 미리" color="text-[#54dbe6]" body="다음 24시간의 사용량과 예상 요금을 계산해 누진 구간 진입 가능성과 비용 변화를 미리 확인합니다." metric="24시간 사용량 예측" /><Product href="/households" index="02" title="생활 신호" ko="평소와 다른 패턴을 더 빨리" color="text-[#ff806d]" body="우리 집의 평소 전력 패턴과 오늘의 사용을 비교해 장시간 미사용이나 비정상적인 사용처럼 확인이 필요한 신호를 알려줍니다." metric="개인 기준선 비교" /><Product href="/solar" index="03" title="태양광" ko="남는 전력을 활용 가능성으로" color="text-[#ffc95c]" body="주소와 주거 조건을 바탕으로 발전량과 잉여 전력을 계산하고, 절감 효과와 거래 가능량을 함께 확인합니다." metric="잉여 전력 분석" /></div></section>
+      <section className="bg-white">
+        <div className="mx-auto max-w-6xl space-y-16 px-4 pb-6 md:space-y-24">
+          <Feature
+            image={photo("feature-app")}
+            alt="휴대폰과 노트북에 띄운 가전별 전력 사용량 대시보드"
+            title={<>이번 달 전기요금,<br />미리 예측하고 아껴 보세요</>}
+            points={["내일 24시간 전력 사용량을 시간대별로 예측", "누진 구간까지 남은 사용량을 확인", "에어컨·TV·세탁기 등 주요 가전의 전력 소비를 분석"]}
+            actions={[{ href: "/analytics", label: "요금 예측 보기" }]}
+          />
 
-      <section className="grid overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-card lg:grid-cols-[0.9fr_1.1fr]"><div className="p-8 md:p-12"><p className="text-xs font-black uppercase tracking-[0.2em] text-teal">로컬에서 처리하는 이유</p><h2 className="mt-4 break-keep text-3xl font-black leading-tight tracking-[-0.035em] md:text-4xl">생활 패턴을 보는 데이터이기에,<br />분석도 집 안에서.</h2><p className="mt-5 break-keep text-sm leading-7 text-slate-500">생활 이상 신호를 확인하려면 전력 사용 패턴을 자세히 살펴봐야 합니다. WattWise는 예측과 이상 탐지를 집 안의 Raspberry Pi에서 수행하고, 필요한 결과만 사용자에게 보여주는 방향으로 설계했습니다.</p><div className="mt-8 space-y-5"><Check title="로컬에서 바로 분석" body="예측과 이상 탐지를 우리 집 Raspberry Pi에서 실행" /><Check title="우리 집 기준으로 비교" body="다른 가구의 평균이 아닌 우리 집의 평소 사용 패턴을 기준으로 판단" /><Check title="원본 데이터 전송 최소화" body="분석에 불필요한 전력 사용 기록은 외부로 보내지 않도록 설계" /></div></div><div className="flex min-h-[430px] items-center justify-center bg-gradient-to-br from-[#121a1e] to-[#243137] p-7 md:p-10"><div className="w-full max-w-md"><div className="text-center text-xs font-bold uppercase tracking-[0.2em] text-white/35">우리 집 전력 분석 흐름</div><div className="mt-8 space-y-3"><FlowStep number="01" title="측정" body="스마트미터 · CT 센서" color="bg-white/10" /><div className="mx-auto h-5 w-px bg-white/15" /><FlowStep number="02" title="분석" body="사용량 예측 · 이상 신호 탐지" color="bg-teal/20" /><div className="mx-auto h-5 w-px bg-white/15" /><FlowStep number="03" title="활용" body="비용 절감 · 안부 확인 지원 · 잉여 전력 활용" color="bg-amber/20" /></div><div className="mt-7 text-center text-[11px] text-white/30">전력 데이터는 필요한 판단으로 바뀌고, 원본 전송은 최소화됩니다</div></div></div></section>
+          <Feature
+            reverse
+            image={photo("feature-kettle")}
+            alt="거실 탁자 위 전기포트와 TV를 보며 차를 마시는 사람"
+            title={<>멀리 있어도,<br />부모님의 일상을 살펴보세요</>}
+            points={["집 안 기기의 전력 사용 패턴을 학습", "TV·전기포트 등의 활동 변화가 감지되면 알림", "전력 데이터는 집 안에서 처리해 개인정보를 보호"]}
+            actions={[{ href: "/households", label: "안부 신호 보기" }]}
+          />
 
-      <section className="relative overflow-hidden rounded-[2rem] bg-teal px-7 py-14 text-white md:px-12 md:py-20"><div className="absolute -right-20 -top-32 h-96 w-96 rounded-full border-[70px] border-white/10" /><div className="relative max-w-3xl"><p className="text-xs font-black uppercase tracking-[0.2em] text-white/55">지금 확인해보세요</p><h2 className="mt-5 text-4xl font-black leading-tight tracking-[-0.04em] md:text-6xl">우리 집 전력을<br />미리 보고, 더 빨리 판단하세요.</h2><p className="mt-5 max-w-xl text-sm leading-7 text-white/70">다음 24시간 사용량과 예상 요금, 평소와 다른 생활 신호, 태양광 잉여 전력의 활용 가능성을 한 흐름에서 확인할 수 있습니다.</p><div className="mt-9 flex flex-wrap gap-3"><Link href="/households" className="btn bg-white !rounded-full px-6 py-3 text-teal hover:bg-slate-50">생활 신호 확인 →</Link><Link href="/solar" className="btn border border-white/30 !rounded-full px-6 py-3 text-white hover:bg-white/10">태양광 분석 보기</Link></div></div></section>
+          <Feature
+            image={photo("feature-solar-house")}
+            alt="지붕에 태양광 패널을 얹은 단독주택"
+            title={<>우리 집 태양광,<br />얼마나 이득일까요?</>}
+            points={["주소와 지붕 조건을 바탕으로 연간 발전량을 예측", "예상 설치비와 투자 회수 기간을 확인", "남는 전력의 판매 과정을 직접 체험"]}
+            actions={[{ href: "/solar", label: "태양광 계산하기" }, { href: "/trade", label: "거래 체험", ghost: true }]}
+          />
+        </div>
+      </section>
+
+      <section className="bg-white">
+        <div className="mx-auto max-w-6xl px-4 pb-20">
+        <div className="grid items-center gap-6 rounded-[2rem] bg-[#FAF6EC] px-6 py-10 md:grid-cols-[auto_1fr] md:gap-10 md:px-12 md:py-12">
+          <div className="relative mx-auto h-40 w-36 md:h-52 md:w-44">
+            <Image src={`${BP}/img/wattwise-ai-consultant.png`} alt="전력 AI 상담사 와티" fill unoptimized className="object-contain drop-shadow-xl" />
+          </div>
+          <div>
+            <h2 className="break-keep text-center text-2xl font-black tracking-[-0.03em] text-[#3D2B1F] md:text-left md:text-4xl">궁금한 건 와티에게 물어보세요</h2>
+            <form action="/chat" method="get" className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <input
+                name="q"
+                required
+                className="min-w-0 flex-1 rounded-2xl border-2 border-[#3D2B1F] bg-white px-5 py-4 text-base text-ink outline-none placeholder:text-slate-400 focus:ring-4 focus:ring-[#3D2B1F]/15"
+                placeholder="예: 이번 달 전기요금 얼마나 나올까?"
+                aria-label="와티에게 물어볼 질문"
+              />
+              <button className="rounded-2xl bg-amber px-8 py-4 text-lg font-bold text-white transition hover:brightness-105 sm:w-auto">물어보기</button>
+            </form>
+            <div className="mt-4 flex flex-wrap justify-center gap-2 md:justify-start">
+              {["에어컨 하루에 얼마나 써?", "누진 구간 언제 넘어?", "전기 절약 팁 알려줘"].map((q) => (
+                <Link key={q} href={`/chat?q=${encodeURIComponent(q)}`} className="rounded-full border border-[#3D2B1F]/20 bg-white px-4 py-2 text-sm text-[#3D2B1F] transition hover:border-[#3D2B1F]">{q}</Link>
+              ))}
+            </div>
+          </div>
+        </div>
+        </div>
+      </section>
     </div>
   );
 }
 
-function DarkStat({ label, value }: { label: string; value: string }) { return <div className="rounded-xl border border-white/10 bg-white/5 p-3"><div className="text-[10px] text-white/35">{label}</div><div className="mt-1 text-sm font-bold text-white">{value}</div></div>; }
-function Number({ value, label }: { value: string; label: string }) { return <div><div className="text-3xl font-black tracking-tight text-ink">{value}</div><div className="mt-1 text-xs text-slate-400">{label}</div></div>; }
-function Product({ href, index, title, ko, color, body, metric }: { href: string; index: string; title: string; ko: string; color: string; body: string; metric: string }) { return <Link href={href} className="group rounded-2xl border border-white/10 bg-white/[0.04] p-6 transition hover:-translate-y-1 hover:bg-white/[0.08]"><div className="flex justify-between"><span className="text-xs text-white/30">{index}</span><span className="text-white/30 transition group-hover:translate-x-1 group-hover:text-white">↗</span></div><div className={`mt-12 text-xs font-bold uppercase tracking-[0.18em] ${color}`}>{metric}</div><h3 className="mt-3 text-3xl font-black">{title}</h3><div className="mt-1 text-sm text-white/40">{ko}</div><p className="mt-6 text-sm leading-7 text-white/55">{body}</p></Link>; }
-function Check({ title, body }: { title: string; body: string }) { return <div className="flex gap-4"><span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-teal text-[10px] text-white">✓</span><div><div className="text-sm font-bold text-ink">{title}</div><div className="mt-1 text-xs text-slate-500">{body}</div></div></div>; }
-function FlowStep({ number, title, body, color }: { number: string; title: string; body: string; color: string }) { return <div className={`flex items-center justify-between rounded-2xl border border-white/10 p-4 ${color}`}><div className="flex items-center gap-4"><span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-xs font-black text-white/60">{number}</span><div><div className="font-bold text-white">{title}</div><div className="mt-0.5 text-xs text-white/40">{body}</div></div></div><span className="text-white/25">→</span></div>; }
+function Tile({ href, image, title, body }: { href: string; image: string; title: string; body: string }) {
+  return (
+    <Link href={href} className="group flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white transition duration-300 hover:-translate-y-1 hover:border-[#3D2B1F]/20 hover:shadow-[0_18px_40px_-12px_rgba(61,43,31,0.25)]">
+      <div className="relative aspect-[4/3] overflow-hidden"><Image src={image} alt="" fill unoptimized className="object-cover transition duration-500 group-hover:scale-105" /></div>
+      <div className="flex flex-1 flex-col p-4 md:p-5">
+        <div className="text-base font-black text-ink md:text-lg">{title}</div>
+        <div className="mt-1 break-keep text-xs leading-5 text-slate-500 md:text-sm md:leading-6">{body}</div>
+        <div className="mt-auto pt-4 text-sm font-bold text-[#3D2B1F]">
+          자세히 보기 <span className="inline-block transition group-hover:translate-x-1" aria-hidden>→</span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+function Feature({ image, alt, credit, title, points, actions, reverse }: { image: string; alt: string; credit?: React.ReactNode; title: React.ReactNode; points: string[]; actions: { href: string; label: string; ghost?: boolean }[]; reverse?: boolean }) {
+  return (
+    <article className="grid items-center gap-8 lg:grid-cols-2 lg:gap-14">
+      <div className={`relative aspect-[4/3] overflow-hidden rounded-[2rem] ${reverse ? "lg:order-2" : ""}`}>
+        <Image src={image} alt={alt} fill unoptimized className="object-cover" />
+        {credit && <p className="absolute bottom-3 left-4 rounded-full bg-black/45 px-2.5 py-1 text-[10px] leading-4 text-white/90 backdrop-blur">{credit}</p>}
+      </div>
+      <div className={reverse ? "lg:order-1" : ""}>
+        <h2 className="break-keep text-3xl font-black leading-[1.2] tracking-[-0.03em] text-[#3D2B1F] md:text-4xl">{title}</h2>
+        <ul className="mt-6 space-y-3">
+          {points.map((p) => (
+            <li key={p} className="flex items-start gap-3 text-base font-medium leading-7 text-black">
+              <svg viewBox="0 0 24 24" className="mt-1 h-5 w-5 shrink-0 text-teal" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M4 12.5l5 5L20 6.5" /></svg>
+              <span className="break-keep">{p}</span>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          {actions.map((a) => (
+            <Link key={a.href} href={a.href} className={`${a.ghost ? "btn-ghost" : "btn-primary"} flex-1 !rounded-2xl py-4 text-lg`}>{a.label}</Link>
+          ))}
+        </div>
+      </div>
+    </article>
+  );
+}
